@@ -4,6 +4,7 @@
 
 ![planning_flowchart.png](planning_flowchart.png)
 
+
 ## 1. Document Preprocessing
 - Read PDF files
 - Filter out unprocessable files (e.g., encrypted)
@@ -27,5 +28,6 @@
   - Markdown (default)
   - Other user-specified formats
 
+![demo-page.png](demo-page.png)
 
-
+Layout analysis is used to distinguish different types of elements and their corresponding regions on a page. Based on the elements found, multi-model processing will be required by the LLM.
