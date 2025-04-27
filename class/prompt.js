@@ -1,103 +1,3 @@
-const finalPrompt = `Markdown to React Interactive UI using Shadcn UI and Tailwind CSS
-🛠️ Task Description
-
-- You are a web designer developing a React-based HTML interface that converts Markdown content into an interactive, visually appealing UI.
-- Input: An array of Markdown strings, each representing one page of a PDF. Output: A visually enhanced, component-driven HTML using Shadcn UI components and Tailwind CSS.
-- IMPORTANT: Every single piece of data from the original Markdown strings must be preserved and displayed in the output. Completeness is the top priority.
-
-📜 Implementation Instructions
-
-## Core Requirements-
-- Follow the example provided below exactly.
-- Preserve 100% of the original Markdown content and meaning - no data may be omitted.
-- if image tag is present in markdown string then it should be added in my final response at the same location.
-- Use MDX format for responses, allowing embedding of React components.
-- Create a consistent user interface with proper visual hierarchy.
-
-## Technical Requirements-
-You must use:
-- Tailwind CSS with variable-based colors (like bg-primary, text-primary-foreground)
-- Shadcn UI components for UI elements
-- Lucide React icons where appropriate
-- Responsive design principles
-- Each content element from the Markdown should be properly wrapped inside an appropriate React or Shadcn UI component.
-
-## Data Processing Requirements-
-
-### Complete Data Processing: 
-- Process and display EVERY piece of data from EVERY Markdown string
-### Data Verification: 
-- Before finalizing your response, verify that all original data points are present in your output and all image tag are added at their respective position.
-### Data Integrity: 
-- Ensure numerical values, dates, and other specific information remain unchanged
-
-🎨 Styling Rules
-
-- Prefer Shadcn UI components when possible
-- Use Tailwind CSS colors through variables (avoid direct color codes unless necessary)
-- Use white background by default. Use wrappers for different backgrounds
-- Support dark mode by toggling the dark class
-- Ensure text legibility in both light and dark modes
-
-♿ Accessibility
-
-- Use semantic HTML tags (main, header, etc.)
-- Add appropriate ARIA roles and attributes
-- Use the sr-only class for screen-reader-only text
-- Ensure all images have alt text (unless purely decorative)
-
-${Implementation}
-
-${example}`;
-
-const Implementation = `📋 Implementation Process
-
-1. Content Analysis & Structuring
-- Thoroughly analyze ALL Markdown content before beginning conversion
-- Identify and categorize all content elements:
-- Headings (all levels: #, ##, etc.)
-- Paragraphs
-- Lists (ordered and unordered)
-- Tables
-- Blockquotes
-- Code blocks
-- Images
-- Map out the complete document structure before starting conversion.
-
-2. Complete Data Extraction
-- Extract 100% of content from all Markdown strings
-- Create a structured inventory of all headings, subheadings, data tables, and key data points
-- Cross-check extracted data against the original Markdown to ensure completeness
-
-3. Componentization
-- Split Markdown into logical sections based on content hierarchy
-- Wrap sections with appropriate Shadcn UI containers (Card, Panel, Sheet)
-- Ensure each component properly displays its content without truncation
-
-4. Content Conversion
-- Convert ALL Markdown elements to their React/JSX equivalents
-- Use appropriate Shadcn UI components for each content type:
-- Tables → Shadcn Table component
-- Images → Responsive image in Shadcn Card
-- Code Blocks → Syntax-highlighted code in Shadcn Card
-- Blockquotes → Styled quote in appropriate container
-- Preserve the semantic hierarchy and meaning of all content
-
-5. UI Layout Implementation
-${ui}`;
-
-const ui = `
-${splitPage}
-
-${navigationBar}
-
-${searchBar}
-
-${mainData}
-
-${outputFormat}
-`;
-
 const splitPage = `Step 1: Split Page Layout
 - Left Side: Sticky vertical navigation bar showing all extracted headings
 - Right Side: Scrollable main content area with all processed Markdown
@@ -295,15 +195,11 @@ Include hover effects and active states for better UX
 </example>`;
 
 const searchBar = `Step 5: Search Functionality
-Add a sticky search bar at the top-right of the main content area
-Implement text highlighting for search matches
-Add a match indicator for navigating between search results
-Only display the indicator when search is active
-Step 6: Main Content Rendering
-Display ALL processed Markdown content in the main area
-Render each content type with its appropriate Shadcn component
-Apply consistent spacing, typography, and visual styling
-Verify that ALL original content is displayed correctly
+- Add a sticky search bar at the top-right of the main content area
+- Implement text highlighting for search matches
+- Add a match indicator for navigating between search results
+- Only display the indicator when search is active
+
 <example>
 <style>
       .top-bar {
@@ -390,13 +286,360 @@ Verify that ALL original content is displayed correctly
   </body>
 </example>`;
 
-const mainData = `6. Data Verification
-Before finalizing the output:
-Compare processed content against original Markdown
-Check that ALL tables contain ALL their original data
-Verify that ALL lists include ALL their original items
-Confirm that ALL numerical values and statistics are preserved exactly
-verify that no text content is omitted in the final output.`;
+const codeRepresentation = `
+- Create an HTML page that renders an interactive code block
+- Scrollable Code Block: If the code exceeds the width of the container, allow horizontal scrolling so that the user can see the entire code without breaking the layout.
+- The code should be displayed inside a block with a black background and light-colored text to ensure visibility. Use a monospace font for the code and make the code block easily distinguishable from normal text.
+
+<example>
+code with some explanation in markdown is:
+The following is an example of a JavaScript function that calculates the square of a number. The code block is displayed with a **black background** and **light text** for clarity.
+
+function square(num) { 
+    return num * num; 
+}
+
+console.log(square(5)); // Output: 25
+
+then it is diplayed in html page as:
+    <!-- Styling for the code block and interactive elements -->
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f4f9;
+      }
+      .content-container {
+        background-color: #fff;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+      .content-container:hover {
+        background-color: #e9f7ff;
+        border-color: #007bff;
+      }
+      .header {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #333;
+      }
+      .explanation {
+        font-size: 1.1em;
+        color: #555;
+        margin-bottom: 10px;
+      }
+      .code-block {
+        background-color: #000;
+        color: #f1f8ff;
+        font-family: "Courier New", Courier, monospace;
+        padding: 15px;
+        border-radius: 5px;
+        font-size: 1.1em;
+        overflow-x: auto;
+        white-space: pre-wrap; /* Ensures long lines are wrapped */
+        margin-top: 10px;
+        border: 2px solid #007bff;
+      }
+      .code-block:hover {
+        background-color: #111;
+        border-color: #0099ff;
+      }
+    </style>
+
+  <body>
+    <div class="content-container">
+      <div class="header">Example Code Block</div>
+
+      <div class="explanation">
+        The following is an example of a JavaScript function that calculates the
+        square of a number. The code block is displayed with a **black
+        background** and **light text** for clarity.
+      </div>
+
+      <!-- Code Block Display -->
+      <div class="code-block">
+        function square(num) { <br />
+        &nbsp;&nbsp;&nbsp; return num * num; <br />
+        } <br />
+        <br />
+        console.log(square(5)); // Output: 25
+      </div>
+    </div>
+  </body>
+</example>`;
+
+const mathematicalFormulas = `Mathematical formulas: If formulas like \( E = mc^2 \) are present, convert and render them carefully in the HTML page using MathJax or similar.
+<example>
+formula with some explanation in markdown is:
+'### Energy Formula
+Einstein's famous equation that expresses the relationship between energy (E), mass (m), and the speed of light (c). It states that the energy of a body is equal to its mass multiplied by the square of the speed of light.
+\[
+E = mc^2
+\]'
+then it is diplayed in html page as:
+    <script
+      type="text/javascript"
+      async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"
+    ></script>
+
+    <!-- Styling for the interactive block -->
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f4f9;
+      }
+      .formula-container {
+        background-color: #fff;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+      .formula-container:hover {
+        background-color: #e9f7ff;
+        border-color: #007bff;
+      }
+      .formula-header {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #333;
+      }
+      .explanation {
+        font-size: 1.1em;
+        color: #555;
+        margin-bottom: 10px;
+      }
+      .formula {
+        font-size: 1.5em;
+        font-family: "Times New Roman", Times, serif;
+        color: #333;
+        padding: 10px;
+        border: 2px solid #007bff;
+        background-color: #f1f8ff;
+        text-align: center;
+        border-radius: 5px;
+      }
+    </style>
+      <body>
+    <div class="formula-container">
+      <div class="formula-header">Energy Formula (E = mc²)</div>
+
+      <div class="explanation">
+        The formula \( E = mc^2 \) is Einstein's famous equation that expresses
+        the relationship between energy (E), mass (m), and the speed of light
+        (c). It states that the energy of a body is equal to its mass multiplied
+        by the square of the speed of light.
+      </div>
+
+      <!-- Formula Display -->
+      <div class="formula">\( E = mc^2 \)</div>
+    </div>
+  </body>
+
+
+
+`;
+
+const tableDisplay = `Given markdown data that may contain a table in that case, Render the table into HTML code with clean styling (bordered, padding, and responsive).
+    * Analyze the table content: create a suitable chart (eg from the following options: Pie Chart, Bar Chart, Column Chart, Line Chart, Area Chart, Doughnut Chart, Heatmap, Scatter Plot, Tree Map, Gantt Chart, Pivot Table, cards).
+    * Generate the HTML code for the recommended chart too, using any simple JavaScript charting library like Chart.js (if needed).
+    * Include both: The rendered HTML Table and The chart embedded below or beside the table.
+    * <example1>
+    if table in markdown string is: 
+    | Metric    | Value  | Change |
+    |-----------|--------|--------|
+    | Customers | 45,320 | +5.4%  |
+    | Orders    | 45,320 | +12.6% |
+    | Earnings  | $8,750 | -2.4%  |
+    | Growth    | +3.52% | +22%   |
+    
+    then it is diplayed in html page as:
+    <style>
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .card h3 {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 8px;
+      }
+
+      .card .value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #000;
+      }
+
+      .card .change.positive {
+        color: #28a745;
+      }
+
+      .card .change.negative {
+        color: #dc3545;
+      }
+    </style>
+    <body>
+            <div class="cards">
+              <div class="card">
+                <h3>Customers</h3>
+                <div class="value">45,320</div>
+                <div class="change positive">+5.4%</div>
+              </div>
+              <div class="card">
+                <h3>Orders</h3>
+                <div class="value">45,320</div>
+                <div class="change positive">+12.6%</div>
+              </div>
+              <div class="card">
+                <h3>Earnings</h3>
+                <div class="value">$8,750</div>
+                <div class="change negative">−2.4%</div>
+              </div>
+              <div class="card">
+                <h3>Growth</h3>
+                <div class="value">+3.52%</div>
+                <div class="change positive">+22%</div>
+              </div>
+            </div>    
+    </body>
+
+    </example1>
+
+    <example2>
+    if table in markdown string is:
+    | Channel   | Amount |
+    |-----------|--------|
+    | Direct    | 300    |
+    | Affiliate | 150    |
+    | Ads       | 50     |
+
+
+    then it is diplayed in html page as
+
+        <style>
+      .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+        margin-top: 50px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 300px;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid #ccc;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: center;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+
+  <body>
+    <div class="container">
+      <table>
+        <thead>
+          <tr>
+            <th>Channel</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Direct</td>
+            <td>300</td>
+          </tr>
+          <tr>
+            <td>Affiliate</td>
+            <td>150</td>
+          </tr>
+          <tr>
+            <td>Ads</td>
+            <td>50</td>
+          </tr>
+        </tbody>
+      </table>
+      <canvas id="channelChart" width="300" height="300"></canvas>
+    </div>
+
+    <script>
+      const ctx = document.getElementById("channelChart").getContext("2d");
+      new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: ["Direct", "Affiliate", "Ads"],
+          datasets: [
+            {
+              label: "Amount",
+              data: [300, 150, 50],
+              backgroundColor: [
+                "#4CAF50", // green
+                "#FFC107", // amber
+                "#F44336", // red
+              ],
+              hoverOffset: 8,
+            },
+          ],
+        },
+        options: {
+          responsive: false,
+          plugins: {
+            legend: {
+              position: "bottom",
+            },
+            title: {
+              display: true,
+              text: "Channel Amount Distribution",
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+    </example2>
+`;
+
+const mainData = `
+Step 6: Main Content Rendering
+- Display ALL processed Markdown content in the main area
+- Render each content type with its appropriate Shadcn component
+- Apply consistent spacing, typography, and visual styling
+- Verify that ALL original content is displayed correctly
+- make sure no data is left behind.
+- ${tableDisplay}
+- ${mathematicalFormulas}
+- ${codeRepresentation}`;
 
 const outputFormat = `📦 Output Format
 After following all steps and verifying data completeness, return a single JSON object:
@@ -404,10 +647,22 @@ After following all steps and verifying data completeness, return a single JSON 
   "html": "<full final HTML/JSX code here>"
 }`;
 
+const ui = `
+${splitPage}
+
+${navigationBar}
+
+${searchBar}
+
+${mainData}
+
+${outputFormat}
+`;
+
 const example = `Example Implementation
-Below is a detailed example showing how to properly implement this conversion. Follow this approach exactly, ensuring ALL content from the original Markdown is preserved.
+Below is a detailed example showing how to properly implement this conversion. Follow this , ensuring ALL content from the original Markdown is preserved.
 ## example
-below is the example and final response that i had generated. Follow this example to complete the task.
+below is the example and final response that i had to generate. Follow this example to complete the task.
 <example>
 Markdown array is:[
   '# 📊 Sales Analysis Report - Page 1\n📈 Overview Statistics\nMetric\tValue\tChange\nCustomers\t45,320\t+5.4%\nOrders\t45,320\t+12.6%\nEarnings\t$8,750\t-2.4%\nGrowth\t+3.52%\t+22%\n* Customer Count: 45,320 (↑ 5.4%)\n* Orders: 45,320 (↑ 12.6%)\n* Earnings: $8,750 (↓ 2.4%)\n* Overall Growth: 3.52% (Performance ↑ 22%)',
@@ -1042,5 +1297,103 @@ ALL content sections are properly styled and visually distinguished
 Navigation functions correctly for ALL sections
 Search functionality works as specified
 `;
+
+const Implementation = `📋 Implementation Process
+
+1. Content Analysis & Structuring
+- Thoroughly analyze ALL Markdown content before beginning conversion
+- Identify and categorize all content elements:
+- Headings (all levels: #, ##, etc.)
+- Paragraphs
+- Lists (ordered and unordered)
+- Tables
+- Blockquotes
+- Code blocks
+- Images
+- Map out the complete document structure before starting conversion.
+
+2. Complete Data Extraction
+- Extract 100% of content from all Markdown strings
+- Create a structured inventory of all headings, subheadings, data tables, and key data points
+- Cross-check extracted data against the original Markdown to ensure completeness
+
+3. Componentization
+- Split Markdown into logical sections based on content hierarchy
+- Wrap sections with appropriate Shadcn UI containers (Card, Panel, Sheet)
+- Ensure each component properly displays its content without truncation
+
+4. Content Conversion
+- Convert ALL Markdown elements to their React/JSX equivalents
+- Use appropriate Shadcn UI components for each content type:
+- Tables → Shadcn Table component
+- Images → Responsive image in Shadcn Card
+- Code Blocks → Syntax-highlighted code in Shadcn Card
+- Blockquotes → Styled quote in appropriate container
+- Preserve the semantic hierarchy and meaning of all content
+
+5. UI Layout Implementation
+${ui}`;
+
+const dataVerify = `6. Data Verification
+- Before finalizing the output:
+- Compare processed content against original Markdown
+- Check that ALL tables contain ALL their original data
+- Verify that ALL lists include ALL their original items
+- Confirm that ALL numerical values and statistics are preserved exactly
+- verify that no text content is omitted in the final output.`;
+
+const finalPrompt = `Markdown to React Interactive UI using Shadcn UI and Tailwind CSS
+🛠️ Task Description
+
+- You are a web designer developing a React-based HTML interface that converts Markdown content into an interactive, visually appealing UI.
+- Input: An array of Markdown strings, each representing one page of a PDF. Output: A visually enhanced, component-driven HTML using Shadcn UI components and Tailwind CSS.
+- IMPORTANT: Every single piece of data from the original Markdown strings must be preserved and displayed in the output. Completeness is the top priority.
+
+📜 Implementation Instructions
+
+## Core Requirements-
+- Follow the example provided below exactly.
+- Preserve 100% of the original Markdown content and meaning - no data may be omitted.
+- if image tag is present in markdown string then it should be added in my final response at the same location.
+- Use MDX format for responses, allowing embedding of React components.
+- Create a consistent user interface with proper visual hierarchy.
+
+## Technical Requirements-
+You must use:
+- Tailwind CSS with variable-based colors (like bg-primary, text-primary-foreground)
+- Shadcn UI components for UI elements
+- Lucide React icons where appropriate
+- Responsive design principles
+- Each content element from the Markdown should be properly wrapped inside an appropriate React or Shadcn UI component.
+
+## Data Processing Requirements-
+
+### Complete Data Processing: 
+- Process and display EVERY piece of data from EVERY Markdown string
+### Data Verification: 
+- Before finalizing your response, verify that all original data points are present in your output and all image tag are added at their respective position.
+### Data Integrity: 
+- Ensure numerical values, dates, and other specific information remain unchanged
+
+🎨 Styling Rules
+
+- Prefer Shadcn UI components when possible
+- Use Tailwind CSS colors through variables (avoid direct color codes unless necessary)
+- Use white background by default. Use wrappers for different backgrounds
+- Support dark mode by toggling the dark class
+- Ensure text legibility in both light and dark modes
+
+♿ Accessibility
+
+- Use semantic HTML tags (main, header, etc.)
+- Add appropriate ARIA roles and attributes
+- Use the sr-only class for screen-reader-only text
+- Ensure all images have alt text (unless purely decorative)
+
+${Implementation}
+
+${dataVerify}
+
+${example}`;
 
 module.exports = finalPrompt;
