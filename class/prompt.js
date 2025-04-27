@@ -632,6 +632,7 @@ const tableDisplay = `Given markdown data that may contain a table in that case,
 
 const mainData = `
 Step 6: Main Content Rendering
+- Strictly follow the example provided to display content in markdown array. And make sure all content is diplayed in final output.
 - Display ALL processed Markdown content in the main area
 - Render each content type with its appropriate Shadcn component
 - Apply consistent spacing, typography, and visual styling
