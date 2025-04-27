@@ -2,7 +2,7 @@ const fs = require("fs");
 const { z } = require("zod");
 
 const MistralApiClass = require("./mistralApi");
-const OpenAiClass = require("./openAiApi");
+const ClaudeAiApi = require("./claudeAiApi");
 const ReplaceImageTagClass = require("./replaceImageTag");
 //----------------------------------------------class----------------------------------------------
 
@@ -33,10 +33,9 @@ class PageView {
       "utf-8"
     );
 
-    //created class instance
-    const openAiClass = new OpenAiClass();
-
-    const uiOutput = await openAiClass.openAiApi(markdowns);
+    // Process with claudeAi
+    const claudeAiApi = new ClaudeAiApi();
+    const uiOutput = await claudeAiApi.claudeApi(markdowns);
 
     fs.writeFileSync("output.json", JSON.stringify(uiOutput, null, 2), "utf-8");
 
