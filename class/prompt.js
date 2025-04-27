@@ -48,7 +48,7 @@ You must use:
 
 ${Implementation}
 
-${example}`
+${example}`;
 
 const Implementation = `📋 Implementation Process
 
@@ -84,7 +84,7 @@ const Implementation = `📋 Implementation Process
 - Preserve the semantic hierarchy and meaning of all content
 
 5. UI Layout Implementation
-${ui}`
+${ui}`;
 
 const ui = `
 ${splitPage}
@@ -96,7 +96,7 @@ ${searchBar}
 ${mainData}
 
 ${outputFormat}
-`
+`;
 
 const splitPage = `Step 1: Split Page Layout
 - Left Side: Sticky vertical navigation bar showing all extracted headings
@@ -158,8 +158,7 @@ Support both light and dark themes with appropriate color adjustments
       }
     </style>
 “““
-</example>`
-
+</example>`;
 
 const navigationBar = `Step 3: Create Navigation Structure(Left Side)
 - Extract ALL headings and subheadings from ALL Markdown pages
@@ -293,7 +292,7 @@ Include hover effects and active states for better UX
     </script>
   </body>
 “““
-</example>`
+</example>`;
 
 const searchBar = `Step 5: Search Functionality
 Add a sticky search bar at the top-right of the main content area
@@ -389,7 +388,7 @@ Verify that ALL original content is displayed correctly
       }
     </script>
   </body>
-</example>`
+</example>`;
 
 const mainData = `6. Data Verification
 Before finalizing the output:
@@ -397,13 +396,13 @@ Compare processed content against original Markdown
 Check that ALL tables contain ALL their original data
 Verify that ALL lists include ALL their original items
 Confirm that ALL numerical values and statistics are preserved exactly
-verify that no text content is omitted in the final output.`
+verify that no text content is omitted in the final output.`;
 
 const outputFormat = `📦 Output Format
 After following all steps and verifying data completeness, return a single JSON object:
 {
   "html": "<full final HTML/JSX code here>"
-}`
+}`;
 
 const example = `Example Implementation
 Below is a detailed example showing how to properly implement this conversion. Follow this approach exactly, ensuring ALL content from the original Markdown is preserved.
