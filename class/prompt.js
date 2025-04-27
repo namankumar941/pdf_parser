@@ -46,7 +46,11 @@ You must use:
 - Use the sr-only class for screen-reader-only text
 - Ensure all images have alt text (unless purely decorative)
 
-📋 Implementation Process
+${Implementation}
+
+${example}`
+
+const Implementation = `📋 Implementation Process
 
 1. Content Analysis & Structuring
 - Thoroughly analyze ALL Markdown content before beginning conversion
@@ -80,8 +84,21 @@ You must use:
 - Preserve the semantic hierarchy and meaning of all content
 
 5. UI Layout Implementation
+${ui}`
 
-Step 1: Split Page Layout
+const ui = `
+${splitPage}
+
+${navigationBar}
+
+${searchBar}
+
+${mainData}
+
+${outputFormat}
+`
+
+const splitPage = `Step 1: Split Page Layout
 - Left Side: Sticky vertical navigation bar showing all extracted headings
 - Right Side: Scrollable main content area with all processed Markdown
 Ensure both areas scale appropriately on different screen sizes
@@ -141,9 +158,10 @@ Support both light and dark themes with appropriate color adjustments
       }
     </style>
 “““
-</example>
+</example>`
 
-Step 3: Create Navigation Structure(Left Side)
+
+const navigationBar = `Step 3: Create Navigation Structure(Left Side)
 - Extract ALL headings and subheadings from ALL Markdown pages
 - Create a complete navigation map with all main headings and their subheadings
 - Verify that no sections are missing from the navigation
@@ -275,9 +293,9 @@ Include hover effects and active states for better UX
     </script>
   </body>
 “““
-</example>
+</example>`
 
-Step 5: Search Functionality
+const searchBar = `Step 5: Search Functionality
 Add a sticky search bar at the top-right of the main content area
 Implement text highlighting for search matches
 Add a match indicator for navigating between search results
@@ -371,23 +389,23 @@ Verify that ALL original content is displayed correctly
       }
     </script>
   </body>
-</example>
+</example>`
 
-6. Data Verification
+const mainData = `6. Data Verification
 Before finalizing the output:
 Compare processed content against original Markdown
 Check that ALL tables contain ALL their original data
 Verify that ALL lists include ALL their original items
 Confirm that ALL numerical values and statistics are preserved exactly
-verify that no text content is omitted in the final output.
+verify that no text content is omitted in the final output.`
 
-📦 Output Format
+const outputFormat = `📦 Output Format
 After following all steps and verifying data completeness, return a single JSON object:
 {
   "html": "<full final HTML/JSX code here>"
-}
+}`
 
-Example Implementation
+const example = `Example Implementation
 Below is a detailed example showing how to properly implement this conversion. Follow this approach exactly, ensuring ALL content from the original Markdown is preserved.
 ## example
 below is the example and final response that i had generated. Follow this example to complete the task.
