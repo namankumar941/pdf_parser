@@ -17,7 +17,7 @@ Include hover effects and active states for better UX
 <example> example for step 3 and step 4:
 “““
 <style>
-      <style > .nav {
+      .nav {
         display: flex;
         flex-direction: column;
       }

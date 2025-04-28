@@ -59,3 +59,4 @@ Support both light and dark themes with appropriate color adjustments
     </style>
 “““
 </example>`;
+

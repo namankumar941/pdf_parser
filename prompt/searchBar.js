@@ -3,6 +3,7 @@ exports.searchBar = `Step 5: Search Functionality
 - Implement text highlighting for search matches
 - Add a match indicator for navigating between search results
 - Only display the indicator when search is active
+- do not change the content of the main content area while searching for matches.
 
 <example>
 <style>
