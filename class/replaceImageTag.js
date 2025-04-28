@@ -36,16 +36,31 @@ class ReplaceImageTagClass {
   replaceImageTag(uiOutput, imagesList) {
     console.log("1.1");
     let imgBase = {};
-    for (let i = 0; i < imagesList.length; i++) {
-      let first = imagesList[i].reduce((acc, img) => {
-        acc[img.id] = img.imageBase64;
-        return acc;
-      }, {});
-      Object.assign(imgBase, first);
+    
+    // Handle empty or invalid imagesList
+    if (!Array.isArray(imagesList) || imagesList.length === 0) {
+      console.log("No images to process");
+      return uiOutput;
     }
+
+    // Build image base64 dictionary
+    for (let i = 0; i < imagesList.length; i++) {
+      if (Array.isArray(imagesList[i])) {
+        let first = imagesList[i].reduce((acc, img) => {
+          if (img && img.id && img.imageBase64) {
+            acc[img.id] = img.imageBase64;
+          }
+          return acc;
+        }, {});
+        Object.assign(imgBase, first);
+      }
+    }
+
     console.log("1.2");
-    uiOutput.html = this.replaceImageWithBase64(uiOutput.html, imgBase);
+    // Replace image tags and return the updated HTML
+    const updatedHtml = this.replaceImageWithBase64(uiOutput, imgBase);
     console.log("1.3");
+    return updatedHtml;
   }
 }
 
