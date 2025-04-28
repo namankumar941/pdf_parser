@@ -4,9 +4,10 @@ const { Anthropic } = require("@anthropic-ai/sdk");
 
 // Claude API configuration
 const CLAUDE_CONFIG = {
-  model: "claude-3-sonnet-20240229",
+  model: "claude-3-7-sonnet-20250219",
   temperature: 1,
-  max_tokens: 4096,
+  max_tokens: 64000,
+  stream: true
 };
 const newFinalPrompt = require("../prompt/newFinalPrompt");
 //----------------------------------------------class----------------------------------------------
@@ -14,33 +15,49 @@ const newFinalPrompt = require("../prompt/newFinalPrompt");
 class ClaudeClass {
   async claudeApi(markdowns) {
     const apiKey = process.env.CLAUDE_API_KEY;
-    const claude = new Anthropic({ apiKey });
+    const client = new Anthropic({ apiKey });
 
     // Create message content
     const userMessage = `IMPORTANT: Return ONLY HTML code, nothing else.
 Input markdown array to convert:
 markdownArray = ${markdowns}
 `;
+    let accumulatedText = "";
 
-    // Make API call
-    const response = await claude.messages.create({
-      ...CLAUDE_CONFIG,
-      system: `${newFinalPrompt.finalPrompt}`,
-      messages: [{ role: "user", content: userMessage }],
-    });
-    console.log("UI generated using Claude API");
-    let htmlString = response.content[0].text;
-    console.log("Raw response:", htmlString);
+    try {
+      // Make API call and wait for all chunks
+      const stream = await client.messages.stream({
+        ...CLAUDE_CONFIG,
+        system: `${newFinalPrompt.finalPrompt}`,
+        messages: [{ role: "user", content: userMessage }],
+      });
 
-    // Clean up the response
-    htmlString = htmlString.trim();
+      // Process the stream
+      for await (const chunk of stream) {
+        if (chunk.type === "content_block_delta") {
+          accumulatedText += chunk.delta.text;
+        }
+      }
+      console.log(accumulatedText);
+      console.log("UI generated using Claude API");
+      const htmlString = accumulatedText.trim();
+      console.log("Raw response:", htmlString);
 
-    // Validate if the response starts with <!DOCTYPE html> to ensure it's HTML
-    if (!htmlString.trim().startsWith("<!DOCTYPE html>")) {
-      throw new Error("Invalid response: Expected HTML string");
+      // Validate if the response starts with <!DOCTYPE html> to ensure it's HTML
+      if (!htmlString.startsWith("<!DOCTYPE html>")) {
+        throw new Error("Invalid response: Expected HTML string");
+      }
+
+      // Additional validation for complete HTML
+      if (!htmlString.includes("</html>")) {
+        throw new Error("Incomplete HTML: Missing closing </html> tag");
+      }
+
+      return htmlString;
+    } catch (error) {
+      console.error("Error in Claude API call:", error);
+      throw error;
     }
-
-    return htmlString;
   }
 }
 
