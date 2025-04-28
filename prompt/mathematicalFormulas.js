@@ -1,4 +1,6 @@
-exports.mathematicalFormulas = `Mathematical formulas: If formulas are present, convert and render them carefully in the HTML page using MathJax or similar.
+exports.mathematicalFormulas = `
+- Mathematical formulas: If formulas are present, convert and render them carefully in the HTML page using MathJax or similar.
+- inside the <example></example> tag, provide the example for rendering Mathematical formulas in html file.
 <example>
 formula with some explanation in markdown is:
 '### Energy Formula
@@ -7,6 +9,7 @@ Einstein's famous equation that expresses the relationship between energy (E), m
 E = mc^2
 \]'
 then it is diplayed in html page as:
+<head>
     <script
       type="text/javascript"
       async
@@ -56,6 +59,7 @@ then it is diplayed in html page as:
         border-radius: 5px;
       }
     </style>
+    </head>
       <body>
     <div class="formula-container">
       <div class="formula-header">Energy Formula (E = mc²)</div>
@@ -71,4 +75,5 @@ then it is diplayed in html page as:
       <div class="formula">\( E = mc^2 \)</div>
     </div>
   </body>
+  </example>
 `;

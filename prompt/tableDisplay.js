@@ -1,8 +1,17 @@
-exports.tableDisplay = `Given markdown data that may contain a table in that case, Render the table into HTML code with clean styling (bordered, padding, and responsive).
-    * Analyze the table content: create a suitable chart (eg from the following options: Pie Chart, Bar Chart, Column Chart, Line Chart, Area Chart, Doughnut Chart, Heatmap, Scatter Plot, Tree Map, Gantt Chart, Pivot Table, cards).
+exports.tableDisplay = `
+    * Render the table into HTML code with clean styling (bordered, padding, and responsive).
+    * understand the table content carefully (read every column and row of table) to create a suitable chart, pick the suitable chart from the list of chart option provided inside <charts></charts> tag.
+    * if possible divide table in multiple suitable charts for better clarity, pick the suitable chart from the list of chart option provided inside <charts></charts> tag.
+    * to understand table content read every column and row of table.
     * Generate the HTML code for the recommended chart too, using any simple JavaScript charting library like Chart.js (if needed).
     * Include both: The rendered HTML Table and The chart embedded below or beside the table.
-    * <example1>
+    * inside the <example1></example1> and <example2></example2> tag, provide the example for rendering suitable chart in html file for different tables.
+    
+<charts>
+list of chart options : [ stacked bar chart, line and bar chart, histogram, Pie Chart, Bar Chart, Line Chart, Area Chart, Doughnut Chart, Heatmap, Scatter Plot, Tree Map, Gantt Chart, sunburst, radar chart]
+</charts>
+
+<example1>
     if table in markdown string is: 
     | Metric    | Value  | Change |
     |-----------|--------|--------|
@@ -73,9 +82,9 @@ exports.tableDisplay = `Given markdown data that may contain a table in that cas
             </div>    
     </body>
 
-    </example1>
+</example1>
 
-    <example2>
+<example2>
     if table in markdown string is:
     | Channel   | Amount |
     |-----------|--------|
@@ -174,5 +183,5 @@ exports.tableDisplay = `Given markdown data that may contain a table in that cas
       });
     </script>
   </body>
-    </example2>
+</example2>
 `;
