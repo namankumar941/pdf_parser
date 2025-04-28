@@ -33,12 +33,26 @@
         width: 100%;
         font-weight: 600;
       }
+
+      .loading {
+        display: none;
+      }
+
+      .loading.show {
+        display: inline-block;
+      }
+
+      .spinner-border {
+        width: 1rem;
+        height: 1rem;
+        margin-right: 0.5rem;
+      }
     </style>
   </head>
   <body>
     <div class="upload-card">
       <h4 class="mb-4 text-center">Upload Your PDF</h4>
-      <form action="/postUploadPdf" method="post" enctype="multipart/form-data">
+      <form id="uploadForm" action="/postUploadPdf" method="post" enctype="multipart/form-data">
         <div class="mb-3">
           <label for="pdf" class="form-label">Select PDF File</label>
           <input
@@ -53,9 +67,22 @@
           <div id="pdfHelp" class="form-text">Only PDF files are allowed.</div>
         </div>
         <div class="mb-3">
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" id="submitBtn" class="btn btn-primary">Submit</button>
+          <div id="loadingText" class="loading text-center">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Processing PDF...
+          </div>
         </div>
       </form>
     </div>
+
+    <script>
+      document.getElementById('uploadForm').addEventListener('submit', function(e) {
+        // Hide submit button
+        document.getElementById('submitBtn').style.display = 'none';
+        // Show loading text
+        document.getElementById('loadingText').classList.add('show');
+      });
+    </script>
   </body>
 </html>
