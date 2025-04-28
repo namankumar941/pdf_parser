@@ -1,4 +1,4 @@
-exports.mathematicalFormulas = `Mathematical formulas: If formulas like \( E = mc^2 \) are present, convert and render them carefully in the HTML page using MathJax or similar.
+exports.mathematicalFormulas = `Mathematical formulas: If formulas are present, convert and render them carefully in the HTML page using MathJax or similar.
 <example>
 formula with some explanation in markdown is:
 '### Energy Formula

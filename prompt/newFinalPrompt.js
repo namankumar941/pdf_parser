@@ -1,87 +1,95 @@
-const splitPage = require("./splitPage");
-const navigationBar = require("./navigationBar");
-const searchBar = require("./searchBar");
+const example = require("./example");
+const mathematicalFormulas = require("./mathematicalFormulas");
+const codeRepresentation = require("./codeRepresentation");
 const tableDisplay = require("./tableDisplay");
+const dataVerify = require("./dataVerify");
 
-exports.finalPrompt = `Extract and Display Markdown Data in Interactive UI
+exports.finalPrompt = `You are an HTML generator that converts an array of Markdown strings (each element is one “page”) into a single, complete HTML document. Follow these rules exactly—do not deviate or omit:
+step 1. Return ONLY valid HTML code with NO explanations or text outside HTML tags
+step 2. Use EXACTLY the same HTML structure, class names, and element hierarchy as shown in the example inside <ui example> </ui example> tag
+step 3. Copy ALL CSS and JavaScript EXACTLY as provided - do not modify or omit any styles or functionality
+step 4. Keep ALL original img tags intact - do not modify or convert them
+step 5. Generating the basic HTML page as per example inside <ui example> </ui example> tag 
+step 6. important functionality that is to be added in basic HTML page are given inside <functionality></functionality> tag, HTML code for these 
+functionality are given inside <ui example> </ui example> tag 
+step 7. now steps 8 to 19 are done in iteration till there are string present in markdown array.(eg initially i=0)
+for(i=0; i<markdownArray.length ; i++) 
+{
+//step 8 to 19 are wraped inside this loop break this loop only if steps inside this loop are executed for all string of markdownArray
+step 8. take one string from markdown array at a time (eg take markdownArray[i])
+step 9. read the data inside the markdown string carefully so that no content or data is left behind and structure of data is also maintained.
+step 10. extract the heading and subheading from markdown string and add then in navigation bar as per the navigation instruction present inside <navigation instruction></navigation instruction> tag.
+step 11. if any table is present in markdown string the then render the table in HTML code as per the instruction inside <table></table> tag.
+step 12. if any code is present in markdown string the then render the code in HTML code as per the instruction inside <code ></code > tag.
+step 13. if any Mathematical formulas present in markdown string the then render the Mathematical formulas in HTML code as per the instruction inside <Mathematical formulas></Mathematical formulas> tag.
+step 14. Render rest content also in same order as it is present and markdown string.
+step 15. most important make sure nothing inside the markdown string is left behind.
+step 16. Keep ALL original img tags intact - do not modify or convert them
+step 17. Place converted markdown content inside .content div
+step 18. before moving to next step verify:
+${dataVerify.dataVerify}
+step 19. break this loop if and only if i == markdownArray.length
+}
+step 20. merge all outputs from above steps into one html file.
+step 21. return a full html file as a response with NO explanations or text outside HTML tags
 
-PROCESS:
-1. Extract structured data from markdown array
-2. Organize data into categories (text, tables, lists, images)
-3. Convert to interactive HTML UI
 
-INPUT: Array of Markdown strings (each representing a PDF page)
-OUTPUT: Single-page interactive HTML with the following structure:
+<ui example> 
+${example.example}
+</ui example>
 
-1. LAYOUT (Required)
-   - Two-panel split layout
-   - Left panel: Fixed-width navigation sidebar
-   - Right panel: Main content area
-   - Search bar fixed at top-right of main content
+ <functionality>
+1: Split Page Layout
+- Left Side: Sticky vertical navigation bar showing all extracted headings and subheadings
+- Right Side: search bar at top and Scrollable main content area with all processed Markdown.
+2: Build Navigation Structure (Left Sidebar)
+- all headings and subheadings from all Markdown files.
+- Dynamically generate a full vertical navigation list.
+- other instruction to generate navigation bar are present inside <navigation instruction></navigation instruction> tag
+3: Search Functionality
+- Add a sticky search bar at the top-right of the main content area
+- Implement text highlighting for search matches
+- Add a match indicator for navigating between search results
+- Only display the indicator when search is active
+- do not change the content of the main content area while searching for matches.
+</functionality>
 
-2. NAVIGATION (Required)
-   - Extract ALL headings/subheadings from markdown
-   - Create collapsible navigation menu
-   - Clicking heading shows/hides subheadings
-   - Clicking any item scrolls to content
-   - Highlight active section
+<navigation instruction>
+- If a heading has subheadings, clicking it shows a dropdown with its subheadings.
+- If no subheadings, clicking directly scrolls to the section.
+- Smooth scroll to content on click on subheading.
+- Sticky, vertically aligned sidebar.
+- Ensure no headings/subheadings are missed.
+</navigation instruction>
 
-3. SEARCH (Required)
-   - Search bar in top-right corner
-   - Highlight matching text
-   - Show match count
-   - Next/Previous match navigation
+<table>
+${tableDisplay.tableDisplay}
+</table>
 
-4. DATA EXTRACTION & DISPLAY (Required)
-   a) Extract Data:
-      - Identify and extract all data types:
-        * Headings and subheadings
-        * Tables and structured data
-        * Lists and bullet points
-        * Key-value pairs
-        * Images and their captions
-        * Code blocks
-        * Quotes and citations
-   
-   b) Process & Organize:
-      - Convert tables to structured JSON
-      - Group related data under headings
-      - Map relationships between data points
-      - Identify metrics and numerical data
-   
-   c) Enhanced Display:
-      - Present data in organized sections
-      - Convert tables to interactive components:
-        * Clean, responsive table display
-        * Automatic chart generation (Bar, Pie, Line)
-        * Card-based layout for metrics
-      - Create data hierarchies:
-        * Collapsible sections
-        * Nested relationships
-        * Connected data points
-      - Interactive elements:
-        * Sortable tables
-        * Filterable lists
-        * Expandable details
+<code >
+${codeRepresentation.codeRepresentation}
+</code >
 
-STYLING:
-- Use provided example styles
-- Keep layout responsive
-- Ensure dark mode support
+<Mathematical formulas>
+${mathematicalFormulas.mathematicalFormulas}
+</Mathematical formulas>
 
-${splitPage}
-${navigationBar}
-${searchBar}
-${tableDisplay}
 
-OUTPUT FORMAT:
-Return JSON: { "html": "<complete html with ALL required components>" }
-
-VERIFICATION:
-- ALL data is correctly extracted and categorized
-- Data relationships are preserved and displayed
-- Tables are converted to both display formats (table + chart)
-- Navigation shows complete data hierarchy
-- Search works across all extracted data
-- Interactive features are functional
-- Layout matches example`;
+RESPONSE FORMAT:
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Your CSS here */
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar"><!-- Navigation menu --></nav>
+        <main class="content"><!-- Converted markdown content --></main>
+    </div>
+    <script>/* Your JavaScript here */</script>
+</body>
+</html>`;

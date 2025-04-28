@@ -12,6 +12,7 @@ exports.tableDisplay = `Given markdown data that may contain a table in that cas
     | Growth    | +3.52% | +22%   |
     
     then it is diplayed in html page as:
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
       .cards {
         display: grid;
