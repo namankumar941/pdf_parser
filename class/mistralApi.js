@@ -38,7 +38,6 @@ class MistralApiClass {
       dimensions: z.any(),
     });
     while (loop && loopNo < 3) {
-      console.log("enter mistral");
       loopNo++;
       const ocrResponse = await client.ocr.process({
         model: "mistral-ocr-latest",
@@ -52,16 +51,10 @@ class MistralApiClass {
       if (mySchema.safeParse(ocrResponse.pages[0]).success) {
         loop = 0;
 
-        fs.writeFileSync(
-          "mistral_output.json",
-          JSON.stringify(ocrResponse, null, 2),
-          "utf-8"
-        );
         for (const page of ocrResponse.pages) {
           markdowns.push(page.markdown);
           imagesList.push(page.images);
         }
-        console.log("finish mistral");
       }
     }
 

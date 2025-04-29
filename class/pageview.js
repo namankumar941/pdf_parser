@@ -1,5 +1,3 @@
-const fs = require("fs");
-
 const MistralApiClass = require("./mistralApi");
 const ClaudeAiApi = require("./claudeAiApi");
 const OpenAiApi = require("./openAiApi");
@@ -23,17 +21,6 @@ class PageView {
 
     let markdowns = ocrResponse.markdowns;
     let imagesList = ocrResponse.imagesList;
-
-    fs.writeFileSync(
-      "markdowns.json",
-      JSON.stringify(markdowns, null, 2),
-      "utf-8"
-    );
-    fs.writeFileSync(
-      "imagesList.json",
-      JSON.stringify(imagesList, null, 2),
-      "utf-8"
-    );
 
     let uiOutput;
     const apiChoice = req.body.apiChoice;

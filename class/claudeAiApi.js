@@ -23,8 +23,6 @@ class ClaudeClass {
                           markdownArray = ${markdowns}`;
 
     for (let attempt = 0; attempt < 3; attempt++) {
-      console.log(`Claude API attempt ${attempt + 1}/3`);
-
       try {
         const accumulatedText = await this.makeApiCall(userMessage);
         const trimmedText = accumulatedText.trim();
@@ -33,13 +31,11 @@ class ClaudeClass {
         const validationError = validationClass.validation(trimmedText);
 
         if (!validationError) {
-          console.log("HTML generation successful");
           return {
             success: true,
             accumulatedText: trimmedText,
           };
         } else {
-          console.log("Validation failed:", validationError);
           if (attempt === 2) {
             return {
               success: false,
@@ -49,7 +45,6 @@ class ClaudeClass {
           }
         }
       } catch (error) {
-        console.error("API call error:", error);
         if (attempt === 2) {
           return {
             success: false,

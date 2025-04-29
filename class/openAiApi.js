@@ -21,13 +21,11 @@ class OpenAiClass {
         const validationError = validationClass.validation(trimmedText);
 
         if (!validationError) {
-          console.log("HTML generation successful");
           return {
             success: true,
             accumulatedText: trimmedText,
           };
         } else {
-          console.log("Validation failed:", validationError);
           if (attempt === 2) {
             return {
               success: false,
@@ -37,7 +35,6 @@ class OpenAiClass {
           }
         }
       } catch (error) {
-        console.error("API call error:", error);
         if (attempt === 2) {
           return {
             success: false,
@@ -58,7 +55,7 @@ class OpenAiClass {
 
     const openaiApiKey = process.env.OPENAI_API_KEY;
     if (!openaiApiKey) {
-      throw new Error("Claude API key is not configured");
+      throw new Error("openai API key is not configured");
     }
     const openai = new OpenAI({ apiKey: openaiApiKey });
 
