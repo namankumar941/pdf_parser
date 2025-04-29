@@ -64,6 +64,7 @@ class OpenAiClass {
 
     const stream = await openai.responses.create({
       model: "gpt-4.1",
+      temperature: 1,
       input: [
         {
           role: "system",
