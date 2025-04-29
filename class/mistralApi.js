@@ -38,7 +38,7 @@ class MistralApiClass {
       dimensions: z.any(),
     });
     while (loop && loopNo < 3) {
-      console.log("enter");
+      console.log("enter mistral");
       loopNo++;
       const ocrResponse = await client.ocr.process({
         model: "mistral-ocr-latest",
@@ -61,11 +61,17 @@ class MistralApiClass {
           markdowns.push(page.markdown);
           imagesList.push(page.images);
         }
-        console.log("finish");
+        console.log("finish mistral");
       }
     }
 
-    return { markdowns: markdowns, imagesList: imagesList };
+    if (!loop) {
+      return { success: true, markdowns: markdowns, imagesList: imagesList };
+    }
+    return {
+      success: false,
+      error: "Please try again later.",
+    };
   }
 }
 module.exports = MistralApiClass;
