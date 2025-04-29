@@ -18,7 +18,7 @@ step 10. extract the heading and subheading from markdown string and add then in
 step 11. below are three if loop inside <if></if> tag, execute them one by one
 <if> 
 step 12. if (markdownArray[i] has table) 
-            then render the table and its suitable chart in HTML code as per the instruction inside <table></table> tag.
+            - if there are multiple tables then take one table at a time and then render the table and its suitable chart in HTML code as per the instruction inside <table></table> tag.
 </if> 
 <if> 
 step 13. if (markdownArray[i] has code) 
@@ -27,6 +27,11 @@ step 13. if (markdownArray[i] has code)
 <if> 
 step 14. if (markdownArray[i] has Mathematical formulas) 
             then render the Mathematical formulas in HTML code as per the instruction inside <Mathematical formulas></Mathematical formulas> tag.
+</if> 
+<if> 
+step 15. if (markdownArray[i] has image tag) 
+            - then image tag should be present in final html code as it is and do not replace it with base64 string.
+            - display image as instructed inside <image></image> tag
 </if> 
 step 15. Render rest content also in same order as it is present and markdown string.
 step 16. most important make sure nothing inside the markdown string is left behind.

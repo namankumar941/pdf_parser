@@ -1,5 +1,5 @@
 const codeRepresentation = require("./codeRepresentation");
-const dataVerify = require("./dataVerify");
+const displayImage = require("./displayImage");
 const example = require("./example");
 const functionality = require("./functionality");
 const Implementation = require("./Implementation");
@@ -37,6 +37,9 @@ ${codeRepresentation.codeRepresentation}
 ${mathematicalFormulas.mathematicalFormulas}
 </Mathematical formulas>
 
+<image>
+${displayImage.displayImage}
+</image>
 
 RESPONSE FORMAT:
 ${outputFormat.outputFormat}
