@@ -2,9 +2,3 @@ node_modules
 package-lock.json
 /public
 .env
-openAiApi.js
-
-imagesList.json
-markdowns.json
-mistral_output.json
-output.json
