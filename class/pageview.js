@@ -17,6 +17,10 @@ class PageView {
 
     const ocrResponse = await mistralApiClass.mistralApi(req.file.filename);
 
+    if (!ocrResponse.success) {
+      return res.send(ocrResponse);
+    }
+
     let markdowns = ocrResponse.markdowns;
     let imagesList = ocrResponse.imagesList;
 
@@ -44,9 +48,13 @@ class PageView {
       return res.status(400).send("Invalid API choice");
     }
 
+    if (!uiOutput.success) {
+      return res.send(uiOutput);
+    }
+
     const replaceImageTagClass = new ReplaceImageTagClass();
     const updatedHtml = replaceImageTagClass.replaceImageTag(
-      uiOutput,
+      uiOutput.accumulatedText,
       imagesList
     );
     return res.send(updatedHtml);
