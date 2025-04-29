@@ -67,6 +67,14 @@
           <div id="pdfHelp" class="form-text">Only PDF files are allowed.</div>
         </div>
         <div class="mb-3">
+          <label for="apiChoice" class="form-label">Select AI Model</label>
+          <select class="form-select" id="apiChoice" name="apiChoice" required>
+            <option value="">Choose an AI model</option>
+            <option value="openai">OpenAI</option>
+            <option value="claude">Claude</option>
+          </select>
+        </div>
+        <div class="mb-3">
           <button type="submit" id="submitBtn" class="btn btn-primary">Submit</button>
           <div id="loadingText" class="loading text-center">
             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
