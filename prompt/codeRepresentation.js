@@ -1,10 +1,4 @@
-exports.codeRepresentation = `
-- Create an HTML page that renders an interactive code block
-- Scrollable Code Block: If the code exceeds the width of the container, allow horizontal scrolling so that the user can see the entire code without breaking the layout.
-- The code should be displayed inside a block with a black background and light-colored text to ensure visibility. Use a monospace font for the code and make the code block easily distinguishable from normal text.
-- inside the <example></example> tag, provide the example for rendering code block in html file.
-
-<example>
+const example = `
 code with some explanation in markdown is:
 The following is an example of a JavaScript function that calculates the square of a number. The code block is displayed with a **black background** and **light text** for clarity.
 
@@ -14,75 +8,42 @@ function square(num) {
 
 console.log(square(5)); // Output: 25
 
-then it is diplayed in html page as:
-    <!-- Styling for the code block and interactive elements -->
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 20px;
-        background-color: #f4f4f9;
-      }
-      .content-container {
-        background-color: #fff;
-        border: 2px solid #ddd;
-        border-radius: 10px;
-        padding: 20px;
-        margin: 20px 0;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-      }
-      .content-container:hover {
-        background-color: #e9f7ff;
-        border-color: #007bff;
-      }
-      .header {
-        font-size: 1.5em;
-        margin-bottom: 10px;
-        font-weight: bold;
-        color: #333;
-      }
-      .explanation {
-        font-size: 1.1em;
-        color: #555;
-        margin-bottom: 10px;
-      }
-      .code-block {
-        background-color: #000;
-        color: #f1f8ff;
-        font-family: "Courier New", Courier, monospace;
-        padding: 15px;
-        border-radius: 5px;
-        font-size: 1.1em;
-        overflow-x: auto;
-        white-space: pre-wrap; /* Ensures long lines are wrapped */
-        margin-top: 10px;
-        border: 2px solid #007bff;
-      }
-      .code-block:hover {
-        background-color: #111;
-        border-color: #0099ff;
-      }
-    </style>
+then it is to be added in html framework page at its respective position as:
 
-  <body>
-    <div class="content-container">
-      <div class="header">Example Code Block</div>
+<head>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 p-8">
+  <div
+    class="bg-white border-2 border-gray-300 rounded-lg p-8 shadow-lg hover:bg-blue-50 hover:border-blue-500 transition-all"
+  >
+    <div class="text-2xl font-bold text-gray-800 mb-4">Example Code Block</div>
 
-      <div class="explanation">
-        The following is an example of a JavaScript function that calculates the
-        square of a number. The code block is displayed with a **black
-        background** and **light text** for clarity.
-      </div>
-
-      <!-- Code Block Display -->
-      <div class="code-block">
-        function square(num) { <br />
-        &nbsp;&nbsp;&nbsp; return num * num; <br />
-        } <br />
-        <br />
-        console.log(square(5)); // Output: 25
-      </div>
+    <div class="text-lg text-gray-600 mb-4">
+      The following is an example of a JavaScript function that calculates the
+      square of a number. The code block is displayed with a
+      <strong>black background</strong> and <strong>light text</strong> for
+      clarity.
     </div>
-  </body>
+    <div
+      class="bg-black text-gray-100 font-mono p-6 rounded-md text-lg overflow-x-auto whitespace-pre-wrap border-2 border-blue-500 hover:bg-gray-900 hover:border-blue-400"
+    >
+      function square(num) { <br />
+      &nbsp;&nbsp;&nbsp; return num * num; <br />
+      } <br />
+      <br />
+      console.log(square(5)); // Output: 25
+    </div>
+  </div>
+</body>
+`;
+
+exports.codeRepresentation = `
+- Create an HTML page that renders an interactive code block
+- Scrollable Code Block: If the code exceeds the width of the container, allow horizontal scrolling so that the user can see the entire code without breaking the layout.
+- The code should be displayed inside a block with a black background and light-colored text to ensure visibility. Use a monospace font for the code and make the code block easily distinguishable from normal text.
+- inside the <example></example> tag, provide the example for rendering code block in html file.
+
+<example>
+${example}
 </example>`;
