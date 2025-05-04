@@ -5,7 +5,7 @@ exports.outputFormat =
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PowerPixel Dashboard</title>
+    <title>PDF Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
@@ -144,12 +144,19 @@ exports.outputFormat =
         });
       });
       
-        // Search functionality
+       
+      <!-- all js script should be added here-->
+
+    </script>
+    <script>
       const searchInput = document.getElementById("searchInput");
       const nextMatchBtn = document.getElementById("nextMatchBtn");
       let matches = [];
       let currentIndex = 0;
       let debounceTimeout;
+
+      // Restrict to markdown-rendered container only
+      const markdownContainer = document.getElementById("markdownContainer");
 
       function scrollToMatch(el) {
         if (el) {
@@ -160,7 +167,8 @@ exports.outputFormat =
       }
 
       function clearHighlights() {
-        document.querySelectorAll("mark").forEach((mark) => {
+        if (!markdownContainer) return;
+        markdownContainer.querySelectorAll("mark").forEach((mark) => {
           mark.outerHTML = mark.innerHTML;
         });
       }
@@ -176,9 +184,9 @@ exports.outputFormat =
           return;
         }
 
-        const searchableElements = document.querySelectorAll(
-          ".content h1, .content h2, .content h3, .content p, .content li"
-        );
+        const searchableElements =
+          markdownContainer.querySelectorAll("h1, h2, h3, p, li");
+
         const escapedSearchTerm = searchTerm.replace(
           /[-\/\\^$*+?.()|[\]{}]/g,
           "\\$&"
@@ -191,7 +199,7 @@ exports.outputFormat =
           }
         });
 
-        matches = Array.from(document.querySelectorAll("mark"));
+        matches = Array.from(markdownContainer.querySelectorAll("mark"));
         nextMatchBtn.style.display = matches.length > 1 ? "block" : "none";
 
         if (matches.length > 0) {
@@ -211,8 +219,6 @@ exports.outputFormat =
           scrollToMatch(matches[currentIndex]);
         }
       });
-
-
     </script>
   </body>
 </html>

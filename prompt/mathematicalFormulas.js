@@ -1,11 +1,21 @@
 const example = `formula with some explanation in markdown is:
-'### Energy Formula
+### Energy Formula
 Einstein's famous equation that expresses the relationship between energy (E), mass (m), and the speed of light (c). It states that the energy of a body is equal to its mass multiplied by the square of the speed of light.
-\[
-E = mc^2
-\]'
+\[E = mc^2\]
 then it is to be added in html framework page at its respective position as:
 <head>
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
   <script
     type="text/javascript"
     async
@@ -41,8 +51,11 @@ then it is to be added in html framework page at its respective position as:
 
 exports.mathematicalFormulas = `
 - Mathematical formulas: If formulas are present, convert and render them carefully in the HTML page using MathJax or similar.
+- add Mathematical formulas using following "\(\)" notation in html page as used in example.
 - Keep the HTML code concise and clean, using minimal but effective Tailwind classes.
 - inside the <example></example> tag, provide the example for rendering Mathematical formulas in html file.
+- add script inside head carefully so that formula is rendered perfectly.
+- Add the <head>, <script>, and main content sections in their appropriate places within the HTML framework.
 
 <example>
 ${example}

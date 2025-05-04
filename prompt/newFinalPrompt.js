@@ -11,7 +11,8 @@ exports.finalPrompt = `You are an HTML generator that converts a PDF's content (
 TASK OVERVIEW:
 1. Process each markdown string in the array sequentially
 2. Extract and organize content while maintaining the PDF's structure
-3. Generate a complete, well-formatted HTML document with navigation
+3. Add the <head>, <script>, and main content sections in their appropriate places within the HTML framework as per the instruction under <ui framework> tag.
+4. Generate a complete, well-formatted HTML document with navigation
 
 IMPLEMENTATION RULES:
 <steps>

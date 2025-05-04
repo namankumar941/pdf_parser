@@ -5,7 +5,7 @@ exports.Implementation = `INITIALIZATION:
 3. Add required libraries in <head>:
    - MathJax for formulas
    - Prism.js for code highlighting
-   - Chart.js for data visualization
+   - Highcharts, ECharts, or D3.js for data visualization
 4. Initialize empty navigation structure
 5. Create main content section with class="content p-6"
 
@@ -63,4 +63,5 @@ FINALIZATION:
    - All required scripts in <head>
    - Complete navigation structure
    - All content in proper order
-   - NO text outside HTML tags`;
+   - NO text outside HTML tags
+5. The search bar should only search and highlight within the content of markdown array, without filtering out or hiding the unsearched content.`;

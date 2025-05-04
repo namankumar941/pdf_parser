@@ -32,6 +32,7 @@ exports.displayImage = `
 - The images should fully fit inside the card and the layout should be responsive and spaced out nicely.
 - Keep the HTML code concise and clean, using minimal but effective Tailwind classes.
 - follow the example given inside <example></example> tag.
+- Add the <head>, <script>, and main content sections in their appropriate places within the HTML framework.
 
 <example>
 ${example}

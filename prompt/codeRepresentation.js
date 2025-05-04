@@ -43,7 +43,7 @@ exports.codeRepresentation = `
 - Scrollable Code Block: If the code exceeds the width of the container, allow horizontal scrolling so that the user can see the entire code without breaking the layout.
 - The code should be displayed inside a block with a black background and light-colored text to ensure visibility. Use a monospace font for the code and make the code block easily distinguishable from normal text.
 - inside the <example></example> tag, provide the example for rendering code block in html file.
-
+- Add the <head>, <script>, and main content sections in their appropriate places within the HTML framework.
 <example>
 ${example}
 </example>`;

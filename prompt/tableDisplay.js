@@ -1,20 +1,11 @@
 const example1 = `
-    if table in markdown string is: 
-    | Metric    | Value  | Change |
-    |-----------|--------|--------|
-    | Customers | 45,320 | +5.4%  |
-    | Orders    | 45,320 | +12.6% |
-    | Earnings  | $8,750 | -2.4%  |
-    | Growth    | +3.52% | +22%   |
-    
-    then it is to be added in html framework page at its respective position as:
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+  <title>Dashboard</title>
 </head>
 <body class="bg-gray-100 p-6 min-h-screen">
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-10">
     <div class="bg-white p-5 rounded-xl shadow">
       <h3 class="text-gray-500 text-lg mb-1">Customers</h3>
       <div class="text-2xl font-bold">45,320</div>
@@ -36,6 +27,71 @@ const example1 = `
       <div class="text-green-600 font-medium">+22%</div>
     </div>
   </div>
+
+  <div class="bg-white p-6 rounded-xl shadow">
+    <div id="metricChart" style="width: 100%; height: 400px"></div>
+  </div>
+
+  <script>
+    const chart = echarts.init(document.getElementById("metricChart"));
+
+    const option = {
+      title: {
+        text: "Metric Overview",
+        left: "center",
+      },
+      tooltip: {
+        trigger: "axis",
+      },
+      legend: {
+        data: ["Value", "Change %"],
+        bottom: 0,
+      },
+      xAxis: {
+        type: "category",
+        data: ["Customers", "Orders", "Earnings", "Growth"],
+      },
+      yAxis: [
+        {
+          type: "value",
+          name: "Value",
+        },
+        {
+          type: "value",
+          name: "Change %",
+          axisLabel: {
+            formatter: "{value} %",
+          },
+        },
+      ],
+      series: [
+        {
+          name: "Value",
+          type: "bar",
+          data: [45320, 45320, 8750, 3.52],
+          itemStyle: {
+            color: "#60A5FA",
+          },
+        },
+        {
+          name: "Change %",
+          type: "line",
+          yAxisIndex: 1,
+          data: [5.4, 12.6, -2.4, 22],
+          itemStyle: {
+            color: "#10B981",
+          },
+          lineStyle: {
+            width: 3,
+          },
+          symbolSize: 10,
+        },
+      ],
+    };
+
+    chart.setOption(option);
+    window.addEventListener("resize", () => chart.resize());
+  </script>
 </body>
 `;
 
@@ -51,7 +107,7 @@ const example2 = `
     then it is to be added in html framework page at its respective position as:
 
 <head>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="flex justify-center items-center min-h-screen bg-white">
@@ -78,33 +134,34 @@ const example2 = `
         </tr>
       </tbody>
     </table>
-    <canvas id="channelChart" width="300" height="300"></canvas>
+    <div id="channelChart" style="width: 300px; height: 300px"></div>
   </div>
 
   <script>
-    new Chart(document.getElementById("channelChart"), {
-      type: "doughnut",
-      data: {
-        labels: ["Direct", "Affiliate", "Ads"],
-        datasets: [
-          {
-            label: "Amount",
-            data: [300, 150, 50],
-            backgroundColor: ["#4CAF50", "#FFC107", "#F44336"],
-            hoverOffset: 8,
-          },
-        ],
-      },
-      options: {
-        responsive: false,
-        plugins: {
-          legend: { position: "bottom" },
-          title: { display: true, text: "Channel Amount Distribution" },
+    Highcharts.chart("channelChart", {
+      chart: { type: "pie" },
+      title: { text: "Channel Amount Distribution" },
+      series: [
+        {
+          name: "Amount",
+          data: [
+            { name: "Direct", y: 300 },
+            { name: "Affiliate", y: 150 },
+            { name: "Ads", y: 50 },
+          ],
+        },
+      ],
+      plotOptions: {
+        pie: {
+          allowPointSelect: true,
+          cursor: "pointer",
+          dataLabels: { enabled: true, format: "{point.name}: {point.y}" },
         },
       },
     });
   </script>
 </body>
+
 `;
 
 exports.tableDisplay = `TABLE AND CHART RENDERING INSTRUCTIONS:
@@ -117,28 +174,10 @@ exports.tableDisplay = `TABLE AND CHART RENDERING INSTRUCTIONS:
 
 2. Chart Generation:
    - Analyze table data to determine best chart type
-   - Options: given inside <charts></charts> tag
-   - Use Chart.js for interactive visualizations
-   - Multiple charts if needed for complex data
+   - Use Highcharts, ECharts, or D3.js to visualize the data in this table.
+   - use Multiple charts if needed for complex data
    - Place charts beside or below tables
 
-3. Layout Structure:
-   <div class="flex flex-col md:flex-row gap-6 my-6">
-     <div class="w-full md:w-1/2">
-       [Table goes here]
-     </div>
-     <div class="w-full md:w-1/2">
-       [Chart goes here]
-     </div>
-   </div>
-
-4. Required Scripts:
-   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
-<charts>
-list of chart options : [ stacked bar chart, line and bar chart, histogram, Pie Chart, Bar Chart, Line Chart, Area Chart, Doughnut Chart, Heatmap, Scatter Plot, Tree Map, Gantt Chart, sunburst, radar chart]
-</charts>
 
 EXAMPLES:
 
@@ -152,12 +191,5 @@ ${example1}
 ${example2}
 </example2>
 
-CHART SELECTION GUIDE:
-- Comparison data → Bar/Column charts
-- Time series → Line charts
-- Parts of whole → Pie/Doughnut charts
-- Distributions → Histogram/Area charts
-- Correlations → Scatter plots
-- Multi-variable → Radar charts
-- Geographic → Heat maps
+- Add the <head>, <script>, and main content sections in their appropriate places within the HTML framework.
 `;
