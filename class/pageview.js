@@ -13,8 +13,13 @@ class PageView {
     //created class instance
     const mistralApiClass = new MistralApiClass();
 
-    const ocrResponse = await mistralApiClass.mistralApi(req.file.filename);
+    const pdfArray = chunkPdfIntoPairs(`./public/pdf/${req.file.filename}`)
 
+    const ocrResponse = await mistralApiClass.mistralApi(
+      pdfArray,
+      req.file.filename
+    );
+    
     if (!ocrResponse.success) {
       return res.send(ocrResponse);
     }
@@ -45,6 +50,29 @@ class PageView {
       imagesList
     );
     return res.send(updatedHtml);
+  }
+
+  async chunkPdfIntoPairs(filePath) {
+    const pdfBytes = fs.readFileSync(filePath);
+    const originalPdf = await PDFDocument.load(pdfBytes);
+    const totalPages = originalPdf.getPageCount();
+    let pdfArray = [];
+
+    for (let i = 0; i < totalPages; i += 2) {
+      const newPdf = await PDFDocument.create();
+
+      const pagesToCopy = [];
+      if (i < totalPages) pagesToCopy.push(i);
+      if (i + 1 < totalPages) pagesToCopy.push(i + 1);
+
+      const copiedPages = await newPdf.copyPages(originalPdf, pagesToCopy);
+      copiedPages.forEach((page) => newPdf.addPage(page));
+
+      const chunkBuffer = await newPdf.save();
+
+      pdfArray.push(Buffer.from(chunkBuffer));
+    }
+    return pdfArray;
   }
 }
 
