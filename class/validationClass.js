@@ -1,3 +1,4 @@
+const { z } = require("zod");
 //----------------------------------------------class----------------------------------------------
 
 class validationClass {
@@ -10,6 +11,15 @@ class validationClass {
       return 1;
     }
     return 0;
+  }
+  zValidation(page) {
+    const mySchema = z.object({
+      index: z.number(),
+      markdown: z.string(),
+      images: z.any(),
+      dimensions: z.any(),
+    });
+    return mySchema.safeParse(page).success;
   }
 }
 
