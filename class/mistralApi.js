@@ -16,26 +16,29 @@ class MistralApiClass {
       const result = this.makeApiCallWithRetries(signedUrl);
       return result;
     } catch (error) {
-      console.log(error);
-      throw new Error("Please try again later");
+      throw new Error(error);
     }
   }
   async uploadAndSignedUrl(uploadedFile, filename) {
-    const uploadedPdf = await this.client.files.upload({
-      file: {
-        fileName: `${filename}`,
-        content: uploadedFile,
-      },
-      purpose: "ocr",
-    });
+    try {
+      const uploadedPdf = await this.client.files.upload({
+        file: {
+          fileName: `${filename}`,
+          content: uploadedFile,
+        },
+        purpose: "ocr",
+      });
 
-    const signedUrl = await this.client.files.getSignedUrl({
-      fileId: uploadedPdf.id,
-    });
-    return signedUrl;
+      const signedUrl = await this.client.files.getSignedUrl({
+        fileId: uploadedPdf.id,
+      });
+      return signedUrl;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
   async makeApiCallWithRetries(signedUrl) {
-    let loopNo = 0;
+    let loopNo = 3;
 
     while (loopNo < 3) {
       loopNo++;
@@ -53,7 +56,7 @@ class MistralApiClass {
       }
 
       if (loopNo == 3) {
-        throw new Error("Please try again later");
+        throw new Error(error);
       }
     }
   }
