@@ -36,16 +36,12 @@ class ReplaceImageTagClass {
 
     // Build image base64 dictionary
     for (let i = 0; i < imagesList.length; i++) {
-      if (Array.isArray(imagesList[i])) {
-        let first = imagesList[i].reduce((acc, img) => {
-          if (img && img.id && img.imageBase64) {
-            acc[img.id] = img.imageBase64;
-          }
-          return acc;
-        }, {});
-        Object.assign(imgBase, first);
+      const img = imagesList[i];
+      if (img && img.id && img.imageBase64) {
+        imgBase[img.id] = img.imageBase64;
       }
     }
+
     // Replace image tags and return the updated HTML
     const updatedHtml = this.replaceImageWithBase64(uiOutput, imgBase);
 
