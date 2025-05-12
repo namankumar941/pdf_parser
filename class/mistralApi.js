@@ -38,7 +38,7 @@ class MistralApiClass {
     }
   }
   async makeApiCallWithRetries(signedUrl) {
-    let loopNo = 3;
+    let loopNo = 0;
 
     while (loopNo < 3) {
       loopNo++;
