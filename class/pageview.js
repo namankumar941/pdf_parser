@@ -18,20 +18,16 @@ class PageView {
 
   async postUploadPdf(req, res) {
     try {
+      // Process the uploaded PDF using Mistral OCR to extract text and structure
       const ocrResponse = await this.processUploadedPdfWithOcr(
         req.file.filename
       );
+      // Format the extracted OCR text into clean markdown using OpenAI
       const markdowns = await this.openAiApi.formatOcrMarkdownWithOpenAI(
         ocrResponse.markdowns.join("\n")
       );
-
-      fs.writeFile("README2.md", markdowns, (err) => {
-        if (err) {
-          console.error("Error writing file:", err);
-        } else {
-          console.log("Markdown file created successfully.");
-        }
-      });
+      // Split the markdown content into chunks based on headings for easier processing
+      const markdownChunks = this.splitMarkdownByHeading(markdowns);
 
       // const uiOutput = await this.handleAiApiSelection(
       //   ocrResponse.markdowns,
@@ -49,7 +45,7 @@ class PageView {
       return res.send({ success: false, error: "Please try again later" });
     }
   }
-
+  // Processes the uploaded PDF using Mistral OCR and returns the extracted content
   async processUploadedPdfWithOcr(fileName) {
     try {
       const mistralApiClass = new MistralApiClass();
@@ -63,6 +59,23 @@ class PageView {
     } catch (error) {
       throw new Error(error);
     }
+  }
+  // Splits markdown text into chunks based on the specified heading level
+  splitMarkdownByHeading(markdown, headingLevel = 1) {
+    const headingPrefix = "#".repeat(headingLevel);
+    const regex = new RegExp(`^(${headingPrefix} .+)`, "gm");
+    const matches = [...markdown.matchAll(regex)];
+
+    const chunks = [];
+    for (let i = 0; i < matches.length; i++) {
+      const start = matches[i].index;
+      const end =
+        i + 1 < matches.length ? matches[i + 1].index : markdown.length;
+      const chunk = markdown.slice(start, end).trim();
+      chunks.push(chunk);
+    }
+
+    return chunks;
   }
 
   async handleAiApiSelection(markdowns, apiChoice) {
