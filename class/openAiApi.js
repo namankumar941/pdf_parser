@@ -8,13 +8,17 @@ class OpenAiClass {
   async openAiApi(markdowns) {
     const validationClass = new ValidationClass();
     // Create message content
-    const userMessage = `IMPORTANT: Return ONLY HTML code, nothing else.
+    const userPrompt = `IMPORTANT: Return ONLY HTML code, nothing else.
                           Input markdown array to convert:
                           markdownArray = ${markdowns}`;
 
     for (let attempt = 0; attempt < 3; attempt++) {
       try {
-        const accumulatedText = await this.makeApiCall(userMessage);
+        const accumulatedText = await this.streamOpenAIResponse(
+          newFinalPrompt.finalPrompt,
+          userPrompt,
+          "gpt-4.1"
+        );
         const trimmedText = accumulatedText.trim();
 
         // Validate the response
@@ -50,7 +54,25 @@ class OpenAiClass {
         "The service is temporarily unavailable. Please try again later or use a different agent.",
     };
   }
-  async makeApiCall(userMessage) {
+  async formatOcrMarkdownWithOpenAI(markdowns) {
+    const systemPrompt = `You are a Markdown formatting assistant.
+  - Given poorly formatted Markdown file, analyze and assign appropriate heading and subheadings tags according to the content inside the markdown file.
+  - Do not alter original content of markdown file.
+  - Return only the updated Markdown file without any explanation or other text.`;
+    const userPrompt = `only markdown file in response no other explanation text.
+              Here is the content: ${markdowns}`;
+    try {
+      const accumulatedText = await this.streamOpenAIResponse(
+        systemPrompt,
+        userPrompt,
+        "gpt-4o"
+      );
+      return accumulatedText;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+  async streamOpenAIResponse(systemPrompt, userPrompt, model) {
     let accumulatedText = "";
 
     const openaiApiKey = process.env.OPENAI_API_KEY;
@@ -60,16 +82,16 @@ class OpenAiClass {
     const openai = new OpenAI({ apiKey: openaiApiKey });
 
     const stream = await openai.responses.create({
-      model: "gpt-4.1",
+      model: model,
       temperature: 1,
       input: [
         {
           role: "system",
-          content: newFinalPrompt.finalPrompt,
+          content: systemPrompt,
         },
         {
           role: "user",
-          content: userMessage,
+          content: userPrompt,
         },
       ],
       stream: true,
