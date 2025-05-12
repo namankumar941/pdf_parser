@@ -1,3 +1,5 @@
+require("dotenv").config();
+const OpenAI = require("openai");
 const MistralApiClass = require("./mistralApi");
 const ClaudeAiApi = require("./claudeAiApi");
 const OpenAiApi = require("./openAiApi");
@@ -7,93 +9,62 @@ const { PDFDocument } = require("pdf-lib");
 //----------------------------------------------class----------------------------------------------
 
 class PageView {
+  constructor() {
+    this.openAiApi = new OpenAiApi();
+  }
   async getUploadPdf(req, res) {
     return res.render("uploadPdf");
   }
 
   async postUploadPdf(req, res) {
     try {
-      const ocrResponse = await this.chunkPdfIntoPairs(
-        `./public/pdf/${req.file.filename}`,
+      const ocrResponse = await this.processUploadedPdfWithOcr(
         req.file.filename
       );
-
-      const uiOutput = await this.handleAiApiSelection(
-        ocrResponse.markdowns,
-        req.body.apiChoice
+      const markdowns = await this.openAiApi.formatOcrMarkdownWithOpenAI(
+        ocrResponse.markdowns.join("\n")
       );
 
-      const replaceImageTagClass = new ReplaceImageTagClass();
-      const updatedHtml = replaceImageTagClass.replaceImageTag(
-        uiOutput.accumulatedText,
-        ocrResponse.imagesList
-      );
-      return res.send(updatedHtml);
+      fs.writeFile("README2.md", markdowns, (err) => {
+        if (err) {
+          console.error("Error writing file:", err);
+        } else {
+          console.log("Markdown file created successfully.");
+        }
+      });
+
+      // const uiOutput = await this.handleAiApiSelection(
+      //   ocrResponse.markdowns,
+      //   req.body.apiChoice
+      // );
+
+      // const replaceImageTagClass = new ReplaceImageTagClass();
+      // const updatedHtml = replaceImageTagClass.replaceImageTag(
+      //   uiOutput.accumulatedText,
+      //   ocrResponse.imagesList
+      // );
+      // return res.send(updatedHtml);
     } catch (error) {
       console.log(error);
       return res.send({ success: false, error: "Please try again later" });
     }
   }
 
-  async chunkPdfIntoPairs(filePath, fileName) {
+  async processUploadedPdfWithOcr(fileName) {
     try {
-      const pdfBytes = fs.readFileSync(filePath);
-      const originalPdf = await PDFDocument.load(pdfBytes);
-
-      const res = await this.splitAndSendPdfChunksToMistral(
-        originalPdf,
+      const mistralApiClass = new MistralApiClass();
+      const uploadedFile = fs.readFileSync(`./public/pdf/${fileName}`);
+      const ocrResponse = await mistralApiClass.mistralApi(
+        uploadedFile,
         fileName
       );
 
-      const markdowns = res.map((obj) => obj.markdowns).flat();
-      const imagesList = res
-        .map((obj) => obj.imagesList)
-        .flat(2)
-        .filter(
-          (item) =>
-            typeof item === "object" &&
-            item !== null &&
-            Object.keys(item).length > 0
-        );
+      return ocrResponse;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 
-      return {
-        markdowns: markdowns,
-        imagesList: imagesList,
-      };
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
-  async splitAndSendPdfChunksToMistral(originalPdf, fileName) {
-    try {
-      const mistralApiClass = new MistralApiClass(this.claudeClient);
-      const totalPages = originalPdf.getPageCount();
-      const chunkPromises = Array.from(
-        { length: Math.ceil(totalPages / 2) },
-        (_, idx) => {
-          return (async () => {
-            const newPdf = await PDFDocument.create();
-            const i = idx * 2;
-            const pagesToCopy = [i, i + 1].filter((p) => p < totalPages);
-            const copiedPages = await newPdf.copyPages(
-              originalPdf,
-              pagesToCopy
-            );
-            copiedPages.forEach((page) => newPdf.addPage(page));
-            const chunkBuffer = await newPdf.save();
-            return mistralApiClass.mistralApi(
-              Buffer.from(chunkBuffer),
-              `${fileName} ${i}`
-            );
-          })();
-        }
-      );
-      const res = await Promise.all(chunkPromises);
-      return res;
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
   async handleAiApiSelection(markdowns, apiChoice) {
     try {
       if (apiChoice === "openai") {
