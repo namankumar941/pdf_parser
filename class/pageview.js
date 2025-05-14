@@ -1,16 +1,19 @@
 require("dotenv").config();
-const OpenAI = require("openai");
 const MistralApiClass = require("./mistralApi");
-const ClaudeAiApi = require("./claudeAiApi");
-const OpenAiApi = require("./openAiApi");
+const OpenAiApiClass = require("./openAiApi");
 const ReplaceImageTagClass = require("./replaceImageTag");
 const fs = require("fs");
-const { PDFDocument } = require("pdf-lib");
+const HandleAiApiSelectionClass = require("./handleAiApiSelection");
+const HtmlviewClass = require("./htmlView");
 //----------------------------------------------class----------------------------------------------
 
-class PageView {
+class PageViewClass {
   constructor() {
-    this.openAiApi = new OpenAiApi();
+    this.handleAiApiSelectionClass = new HandleAiApiSelectionClass();
+    this.replaceImageTagClass = new ReplaceImageTagClass();
+    this.openAiApiClass = new OpenAiApiClass();
+    this.htmlviewClass = new HtmlviewClass();
+    this.mistralApiClass = new MistralApiClass();
   }
   async getUploadPdf(req, res) {
     return res.render("uploadPdf");
@@ -19,38 +22,39 @@ class PageView {
   async postUploadPdf(req, res) {
     try {
       // Process the uploaded PDF using Mistral OCR to extract text and structure
-      const ocrResponse = await this.processUploadedPdfWithOcr(
+      const ocrResponse = await this.processUploadedPdfWithMistralOcr(
         req.file.filename
       );
       // Format the extracted OCR text into clean markdown using OpenAI
-      const markdowns = await this.openAiApi.formatOcrMarkdownWithOpenAI(
+      const markdown = await this.openAiApiClass.formatOcrMarkdownWithOpenAI(
         ocrResponse.markdowns.join("\n")
       );
+
       // Split the markdown content into chunks based on headings for easier processing
-      const markdownChunks = this.splitMarkdownByHeading(markdowns);
+      const markdownChunks = this.splitMarkdownByHeading(markdown);
 
-      // const uiOutput = await this.handleAiApiSelection(
-      //   ocrResponse.markdowns,
-      //   req.body.apiChoice
-      // );
+      const finalJson =
+        await this.handleAiApiSelectionClass.handleAiApiSelection(
+          markdownChunks
+        );
 
-      // const replaceImageTagClass = new ReplaceImageTagClass();
-      // const updatedHtml = replaceImageTagClass.replaceImageTag(
-      //   uiOutput.accumulatedText,
-      //   ocrResponse.imagesList
-      // );
-      // return res.send(updatedHtml);
+      const fullUiHtmlCode = this.htmlviewClass.htmlview(finalJson);
+      const imagesList = ocrResponse.imagesList.flat();
+      const updatedHtml = this.replaceImageTagClass.replaceImageTag(
+        fullUiHtmlCode,
+        imagesList
+      );
+      return res.send(updatedHtml);
     } catch (error) {
       console.log(error);
       return res.send({ success: false, error: "Please try again later" });
     }
   }
   // Processes the uploaded PDF using Mistral OCR and returns the extracted content
-  async processUploadedPdfWithOcr(fileName) {
+  async processUploadedPdfWithMistralOcr(fileName) {
     try {
-      const mistralApiClass = new MistralApiClass();
       const uploadedFile = fs.readFileSync(`./public/pdf/${fileName}`);
-      const ocrResponse = await mistralApiClass.mistralApi(
+      const ocrResponse = await this.mistralApiClass.mistralApi(
         uploadedFile,
         fileName
       );
@@ -77,22 +81,6 @@ class PageView {
 
     return chunks;
   }
-
-  async handleAiApiSelection(markdowns, apiChoice) {
-    try {
-      if (apiChoice === "openai") {
-        const openAiApi = new OpenAiApi();
-        const uiOutput = await openAiApi.openAiApi(markdowns);
-        return uiOutput;
-      } else {
-        const claudeAiApi = new ClaudeAiApi();
-        const uiOutput = await claudeAiApi.claudeApi(markdowns);
-        return uiOutput;
-      }
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
 }
 
-module.exports = PageView;
+module.exports = PageViewClass;
