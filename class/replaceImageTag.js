@@ -17,7 +17,7 @@ class ReplaceImageTagClass {
     function replaceMatch(match, imgSrc) {
       const base64Data = encodeImageToBase64(imgSrc);
       if (base64Data) {
-        return `<img src="${base64Data}" alt="${imgSrc}">`;
+        return `<img src='${base64Data}' alt='${imgSrc}'>`;
       }
       return match; // If no base64 found, return original match
     }
