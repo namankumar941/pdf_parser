@@ -2,77 +2,75 @@ require("dotenv").config();
 
 const { Anthropic } = require("@anthropic-ai/sdk");
 const ValidationClass = require("./validationClass");
+const FixJsonBackslashesClass = require("./fixJsonBackslashes");
 
 // Claude API configuration
 const CLAUDE_CONFIG = {
   model: "claude-3-7-sonnet-20250219",
   temperature: 1,
-  max_tokens: 64000,
+  max_tokens: 5000,
   stream: true,
 };
-const newFinalPrompt = require("../prompt/newFinalPrompt");
+const apiKey = process.env.CLAUDE_API_KEY;
 //----------------------------------------------class----------------------------------------------
 
 class ClaudeClass {
-  async claudeApi(markdowns) {
-    const validationClass = new ValidationClass();
-
-    // Create message content
-    const userMessage = `IMPORTANT: Return ONLY HTML code, nothing else.
-                          Input markdown array to convert:
-                          markdownArray = ${markdowns}`;
-
+  constructor() {
+    this.claudClient = new Anthropic({ apiKey });
+    this.fixJsonBackslashesClass = new FixJsonBackslashesClass();
+    this.validationClass = new ValidationClass();
+  }
+  async claudeApi(markdown, systemPrompt) {
+    try {
+      const userMessage = `markdown string is: ${markdown}, and output in JSON format with keys: "head" (list of strings), "body" (list of dicts with "heading" and "content") and "bodyScript" ( list of strings) `;
+      const jsonRes = this.makeApiCallWithRetries(userMessage, systemPrompt);
+      return jsonRes;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+  async makeApiCallWithRetries(userMessage, systemPrompt) {
     for (let attempt = 0; attempt < 3; attempt++) {
       try {
-        const accumulatedText = await this.makeApiCall(userMessage);
-        const trimmedText = accumulatedText.trim();
+        const jsonRes = await this.streamClaudeResponse(
+          userMessage,
+          systemPrompt
+        );
 
-        // Validate the response
-        const validationError = validationClass.validation(trimmedText);
-
-        if (!validationError) {
-          return {
-            success: true,
-            accumulatedText: trimmedText,
-          };
+        if (this.validationClass.jsonResponseValidation(jsonRes)) {
+          return jsonRes;
         } else {
           if (attempt === 2) {
-            return {
-              success: false,
-              error:
-                "Failed to generate valid UI. Please try again later or use a different agent.",
-            };
+            throw new Error(
+              "Failed to generate valid UI. Please try again later or use a different agent."
+            );
           }
         }
       } catch (error) {
         if (attempt === 2) {
-          return {
-            success: false,
-            error:
-              "The service is temporarily unavailable. Please try again later or use a different agent.",
-          };
+          throw new Error(error);
+        }
+        if (error.message.includes("rate") || error.response?.status === 429) {
+          console.log("enter");
+          const waitTime = parseInt(error.headers["retry-after"], 10) * 1000;
+          await new Promise((resolve) => setTimeout(resolve, waitTime));
+          continue;
         }
       }
     }
-    return {
-      success: false,
-      error:
-        "The service is temporarily unavailable. Please try again later or use a different agent.",
-    };
   }
 
-  async makeApiCall(userMessage) {
+  async streamClaudeResponse(userMessage, systemPrompt) {
     let accumulatedText = "";
-
-    const apiKey = process.env.CLAUDE_API_KEY;
-    if (!apiKey) {
-      throw new Error("Claude API key is not configured");
-    }
-
-    const client = new Anthropic({ apiKey });
-    const stream = await client.messages.stream({
+    const stream = await this.claudClient.messages.stream({
       ...CLAUDE_CONFIG,
-      system: newFinalPrompt.finalPrompt,
+      system: [
+        {
+          type: "text",
+          text: systemPrompt,
+          cache_control: { type: "ephemeral" },
+        },
+      ],
       messages: [{ role: "user", content: userMessage }],
     });
 
@@ -81,7 +79,9 @@ class ClaudeClass {
         accumulatedText += chunk.delta.text;
       }
     }
-    return accumulatedText;
+    let parsedData =
+      this.fixJsonBackslashesClass.fixJsonBackslashes(accumulatedText);
+    return JSON.parse(parsedData);
   }
 }
 
