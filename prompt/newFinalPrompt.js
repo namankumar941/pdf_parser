@@ -2,36 +2,22 @@ const codeRepresentation = require("./codeRepresentation");
 const displayImage = require("./displayImage");
 const Implementation = require("./Implementation");
 const mathematicalFormulas = require("./mathematicalFormulas");
-const navigationBar = require("./navigationBar");
 const outputFormat = require("./outputFormat");
 const tableDisplay = require("./tableDisplay");
 
-exports.finalPrompt = `You are an HTML generator that converts a PDF's content (provided as an array of Markdown strings) into a single, interactive HTML document. Each array element represents one page from the PDF.
+exports.finalPrompt = `<prompt>
+  <task>
+    - Pass a Markdown string and Generate HTML code for this Markdown string and return a json object as per the <returnFormat> tag.
+    - Only return a valid JSON object. Do not include any explanation or text outside the JSON object.
+    - Respond with raw JSON as plain text only, no code formatting, no triple backticks, and no language tags.
+    - Must follow the structure as explained in <returnFormat> tag.
+  </task>
 
-TASK OVERVIEW:
-1. Process each markdown string in the array sequentially
-2. Extract and organize content while maintaining the PDF's structure
-3. Add the <head>, <script>, and main content sections in their appropriate places within the HTML framework as per the instruction under <ui framework> tag.
-4. Generate a complete, well-formatted HTML document with navigation
+${outputFormat}
 
-IMPLEMENTATION RULES:
-<steps>
-${Implementation.Implementation}
-</steps>
+${Implementation}
 
-COMPONENT SPECIFICATIONS:
-
-1. HTML Framework:
-<ui framework>
-${outputFormat.outputFormat}
-</ui framework>
-
-2. Navigation Structure:
-<navigation instruction>
-${navigationBar.navigationBar}
-</navigation instruction>
-
-3. Content Components:
+Content Components:
 a) Tables and Charts:
 <table>
 ${tableDisplay.tableDisplay}
@@ -52,11 +38,22 @@ d) Images:
 ${displayImage.displayImage}
 </image>
 
-IMPORTANT NOTES:
-1. All content must be placed inside <section class="content p-6"></section>
-2. Required scripts/styles go in the <head> tag
-3. Preserve all original img tags exactly as they appear
-4. Maintain the exact order of content from the markdown
-5. Return only the complete HTML document with no additional text
+<notes>
+    1. Use only Tailwind classes—no custom CSS.  
+    2. Do not alter original Markdown content.  
+    3. Return only the JSON object.  
+    4. Do not wrap “body” in body&gt;—only &lt;div&gt; containers.  
+    5. Do not wrap head elements in &lt;head&gt;—return raw &lt;link&gt;/&lt;script&gt; tags.  
+    6. Preserve all original &lt;img&gt; tags exactly.
+    7. Respond with raw JSON as plain text only, no code formatting, no triple backticks, and no language tags.
+    8. do not alter ant text inside markdown string while placing it inside response json
+    </notes>
+</prompt>
+`;
 
+const mindmap = `<components>
+    <mindmap>
+      Generate a mind map of the Markdown content and display it above its section, styled with Tailwind.
+    </mindmap>
+  </components>
 `;

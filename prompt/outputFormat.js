@@ -1,226 +1,63 @@
-exports.outputFormat =
-  `
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PDF Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-    <!-- all script, link or anything required should be added here-->
-    <style>
-      body {
-        font-family: "Inter", sans-serif;
-      }
-      mark {
-        background-color: yellow;
-        padding: 0 2px;
-      }
-    </style>
-  </head>
-  <body class="flex h-screen bg-[#f4f7fa] text-[#333]">
-    <aside class="w-60 bg-[#0d1b2a] text-white p-6 overflow-y-auto">
-      <h1 class="text-2xl text-[#ff385c] mb-10">Doc Heading</h1>
-      <nav class="flex flex-col space-y-2">
-        <div class="group" data-target="heading1">
-          <div
-            class="flex justify-between items-center cursor-pointer text-[#aaa] hover:text-white nav-item"
-          >
-            <span>heading 1</span>
-            <span class="arrow">▸</span>
-          </div>
-          <div
-            class="dropdown-content pl-5 hidden flex-col mt-2"
-            id="heading1-dropdown"
-          >
-            <div>
-              <a
-                href="#heading1-subheading1"
-                class="text-sm text-[#888] hover:text-[#ff385c] dropdown-item"
-                >subheading 1</a
-              >
-            </div>
-            <div>
-              <a
-                href="#heading1-subheading2"
-                class="text-sm text-[#888] hover:text-[#ff385c] dropdown-item"
-                >subheading 2</a
-              >
-            </div>
-          </div>
-        </div>
-        <div class="group" data-target="heading2">
-          <div
-            class="flex justify-between items-center cursor-pointer text-[#aaa] hover:text-white nav-item"
-          >
-            <span>heading 2</span>
-            <span class="arrow">▸</span>
-          </div>
-          <div
-            class="dropdown-content pl-5 hidden flex-col mt-2"
-            id="heading2-dropdown"
-          >
-            <div>
-              <a
-                href="#heading2-subheading1"
-                class="text-sm text-[#888] hover:text-[#ff385c] dropdown-item"
-                >subheading 1</a
-              >
-            </div>
-          </div>
-        </div>
-      </nav>
-    </aside>
+const example = `{
+  head: ['<script></script>','<script></script>','<link>'],
+  body: [
+    {
+      heading: "heading 1",
+      content: [
+        {
+          subheading: "subheading 1",
+          content: [
+            {
+              "sub-subheading": "sub-subheading 1",
+              content: ["<div></div>","<div></div>"],
+            },
+          ],
+        },
+        {
+          subheading: "subheading 2",
+          content: ["<div></div>","<div></div>"],
+        },
+      ],
+    },
+    {
+      heading: "heading 2",
+      content: [<div></div>,"<div></div>"],
+    },
+  ],
+  bodyScript : ['<script></script>','<script></script>']
+}`;
 
-    <main class="flex-1 h-screen overflow-y-auto">
-      <header
-        class="sticky top-0 bg-[#f4f7fa] border-b border-gray-300 p-6 flex justify-end z-50"
-      >
-        <div class="flex items-center gap-2">
-          <button
-            id="nextMatchBtn"
-            class="hidden px-3 py-1 rounded bg-blue-600 text-white text-sm"
-          >
-            ⬇️
-          </button>
-          <input
-            id="searchInput"
-            type="text"
-            placeholder="Search"
-            class="w-48 px-3 py-1.5 border rounded-lg text-sm"
-          />
-        </div>
-      </header>
-      <section class="content p-6">
-      <!-- all html code for content inside markdown array should be added here -->
-      </section>
-    </main>
+exports.outputFormat = `
+<returnFormat type="json">
+  <key name="head">
+    <!-- An array of <script> and <link> tags as strings to be included in the document’s <head> -->
+  </key>
+  <key name="body">
+    <!-- An array of sections, each with "heading" and "content":
+        - If "content" is an array of string, it should be an single line HTML block string(e.g., "<div></div>").
+        - If "content" is an array of objects, it contains objects with "subheading" and "content":
+          - Each "content" under a subheading may be an array of string (HTML) or an array of objects with:
+            - "sub-subheading": string
+            - "content": an array of single line HTML string
+    -->
+  </key>
+  <key name="bodyScript">
+    <!-- An array of <script> to be included inside html body -->
+  </key>
+  <example>
+  ${example}
+  </example>
 
-    <script>
-       document.querySelectorAll(".nav-item").forEach((item) => {
-        item.addEventListener("click", function () {
-          const target = this.parentElement.getAttribute("data-target");` +
-  "const dropdown = document.getElementById(`${target}-dropdown`);" +
-  `const arrow = this.querySelector(".arrow");
-
-          // If dropdown exists and has content
-          if (dropdown && dropdown.children.length > 0) {
-            dropdown.classList.toggle("hidden");
-            arrow.classList.toggle("rotate-90");
-
-            // Close other dropdowns
-            document.querySelectorAll(".dropdown-content").forEach((el) => {
-              if (el !== dropdown) {
-                el.classList.add("hidden");
-                el.previousElementSibling
-                  .querySelector(".arrow")
-                  ?.classList.remove("rotate-90");
-              }
-            });
-          } else {
-            // If no dropdown or empty dropdown, scroll directly to content
-            const targetElement = document.getElementById(target);
-            if (targetElement) {
-              targetElement.scrollIntoView({ behavior: "smooth" });
-            }
-          }
-        });
-      });
-
-      document.querySelectorAll(".dropdown-item").forEach((link) => {
-        link.addEventListener("click", function (e) {
-          e.preventDefault();
-          document
-            .querySelectorAll(".dropdown-item")
-            .forEach((item) => item.classList.remove("text-[#ff385c]"));
-          this.classList.add("text-[#ff385c]");
-          const id = this.getAttribute("href").substring(1);
-          const el = document.getElementById(id);
-          if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-        });
-      });
-      
-       
-      <!-- all js script should be added here-->
-
-    </script>
-    <script>
-      const searchInput = document.getElementById("searchInput");
-      const nextMatchBtn = document.getElementById("nextMatchBtn");
-      let matches = [];
-      let currentIndex = 0;
-      let debounceTimeout;
-
-      // Restrict to markdown-rendered container only
-      const markdownContainer = document.getElementById("markdownContainer");
-
-      function scrollToMatch(el) {
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "center" });
-          el.style.animation = "highlightJump 0.6s ease";
-          setTimeout(() => (el.style.animation = ""), 600);
-        }
-      }
-
-      function clearHighlights() {
-        if (!markdownContainer) return;
-        markdownContainer.querySelectorAll("mark").forEach((mark) => {
-          mark.outerHTML = mark.innerHTML;
-        });
-      }
-
-      function performSearch() {
-        const searchTerm = searchInput.value.toLowerCase().trim();
-        clearHighlights();
-        matches = [];
-        currentIndex = 0;
-
-        if (!searchTerm) {
-          nextMatchBtn.style.display = "none";
-          return;
-        }
-
-        const searchableElements =
-          markdownContainer.querySelectorAll("h1, h2, h3, p, li");
-
-        const escapedSearchTerm = searchTerm.replace(
-          /[-\/\\^$*+?.()|[\]{}]/g,
-          "\\$&"
-        );` +
-  'const searchRegex = new RegExp(`(${escapedSearchTerm})`, "gi");' +
-  `searchableElements.forEach((el) => {
-          const text = el.innerHTML;
-          if (text.toLowerCase().includes(searchTerm)) {
-            el.innerHTML = text.replace(searchRegex, "<mark>$1</mark>");
-          }
-        });
-
-        matches = Array.from(markdownContainer.querySelectorAll("mark"));
-        nextMatchBtn.style.display = matches.length > 1 ? "block" : "none";
-
-        if (matches.length > 0) {
-          scrollToMatch(matches[0]);
-        }
-      }
-
-      // Event Listeners
-      searchInput.addEventListener("input", () => {
-        if (debounceTimeout) clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(performSearch, 300);
-      });
-
-      nextMatchBtn.addEventListener("click", () => {
-        if (matches.length > 0) {
-          currentIndex = (currentIndex + 1) % matches.length;
-          scrollToMatch(matches[currentIndex]);
-        }
-      });
-    </script>
-  </body>
-</html>
-
-`;
+  <note>
+  - Please build the response without adding the following Tailwind script in the "head" key of the final response:
+  <script src='https://cdn.tailwindcss.com'></script>
+  - no text outside { } of final output
+  - The head key should include only the essential scripts and resources to be added inside the <head> tag. This should include meta tags, CSS files, and any critical JavaScript that must be loaded in the <head> section.
+  - The bodyScript key should include any scripts that are intended to be added inside the <body> tag, such as event handlers or deferred scripts.
+  - Make sure to avoid including any body-specific scripts within the <head> section
+  </note>
+  CRITICAL REQUIREMENT (MUST FOLLOW):
+  - analyse the example and understand the structure of final json object.
+  - The HTML or JavaScript code string added to the final response should be on a single line and must not contain any newline characters or span multiple lines.
+  - do not alter ant text inside markdown string while placing it inside response json   
+</returnFormat>`;
