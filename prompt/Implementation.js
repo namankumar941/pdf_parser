@@ -3,8 +3,11 @@ const dataVerify = require("./dataVerify");
 exports.Implementation = ` 
 <instructions>
 - complete all steps inside <steps> tag
+<for>
+for(let i = 0; i < markdownArray.length; i++) {
+// Process each markdown string sequentially
 <steps>
-  1. Parse markdown string completely
+  1. Parse current markdown string (markdownArray[i])
   2. Process special content (in order of appearance):
     <if>
     a) Tables:
@@ -39,4 +42,6 @@ exports.Implementation = `
   5. Quality checks:
     ${dataVerify.dataVerify}
 </steps>
+}
+</for>
 </instructions>`;
