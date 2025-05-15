@@ -100,57 +100,9 @@ class OpenAiClass {
     this.fixJsonBackslashesClass = new FixJsonBackslashesClass();
     this.validationClass = new ValidationClass();
   }
-  async formatOcrMarkdownWithOpenAI(markdowns) {
-    const systemPrompt = `You are a Markdown formatting assistant.
-  - Given poorly formatted Markdown file, analyze and understand content inside markdown then assign appropriate #, ## or ### tags according to the content inside the markdown file.
-  - Do not alter original content of markdown file.
-  - Return only the updated Markdown file without any explanation or other text.`;
-    const userPrompt = `only markdown file in response no other explanation text.
-              Here is the content: ${markdowns}`;
-    for (let attempt = 0; attempt < 3; attempt++) {
-      try {
-        const accumulatedText = await this.streamOpenAIResponse(
-          systemPrompt,
-          userPrompt,
-          "gpt-4.1"
-        );
-        return accumulatedText;
-      } catch (error) {
-        if (attempt === 2) {
-          throw new Error(error);
-        }
-      }
-    }
-  }
-  async streamOpenAIResponse(systemPrompt, userPrompt, model) {
-    let accumulatedText = "";
-
-    const stream = await this.openaiClient.responses.create({
-      model: model,
-      temperature: 1,
-      input: [
-        {
-          role: "system",
-          content: systemPrompt,
-        },
-        {
-          role: "user",
-          content: userPrompt,
-        },
-      ],
-      stream: true,
-    });
-
-    for await (const chunk of stream) {
-      if (chunk.type === "response.output_text.delta") {
-        accumulatedText += chunk.delta;
-      }
-    }
-    return accumulatedText;
-  }
   async openAiApi(markdown, model, systemPrompt) {
     // Create message content
-    const userMessage = `markdown string is: ${markdown}, and output in JSON format with keys: "head" (list of strings), "body" (list of dicts with "heading" and "content") and "bodyScript" ( list of strings) `;
+    const userMessage = `markdownArray is: ${markdown} `;
 
     try {
       const jsonRes = await this.makeApiCallWithRetries(

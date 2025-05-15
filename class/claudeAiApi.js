@@ -22,7 +22,7 @@ class ClaudeClass {
   }
   async claudeApi(markdown, systemPrompt) {
     try {
-      const userMessage = `markdown string is: ${markdown}, and output in JSON format with keys: "head" (list of strings), "body" (list of dicts with "heading" and "content") and "bodyScript" ( list of strings) `;
+      const userMessage = `markdownArray is: ${markdown}, and output in JSON format with keys: "head" (list of strings), "body" (list of dicts with "heading" and "content") and "bodyScript" ( list of strings) `;
       const jsonRes = this.makeApiCallWithRetries(userMessage, systemPrompt);
       return jsonRes;
     } catch (error) {
@@ -36,10 +36,12 @@ class ClaudeClass {
           userMessage,
           systemPrompt
         );
+        console.log("jsonRes", jsonRes);
 
         if (this.validationClass.jsonResponseValidation(jsonRes)) {
           return jsonRes;
         } else {
+          console.log("123");
           if (attempt === 2) {
             throw new Error(
               "Failed to generate valid UI. Please try again later or use a different agent."
@@ -47,6 +49,7 @@ class ClaudeClass {
           }
         }
       } catch (error) {
+        console.log(error);
         if (attempt === 2) {
           throw new Error(error);
         }
